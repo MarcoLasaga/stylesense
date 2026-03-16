@@ -142,7 +142,7 @@ export default function UploadClothes() {
           </div>
 
           {/* Category */}
-          <ChipSelect label="Category *" options={categories} value={category} onChange={setCategory} />
+          <ChipSelect label="Category *" options={categories as unknown as string[]} value={category} onChange={v => setCategory(v as ClothingCategory)} />
 
           {/* Color */}
           <div>
