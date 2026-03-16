@@ -74,8 +74,8 @@ export default function UploadClothes() {
     setOccasion('everyday');
   };
 
-  const ChipSelect = <T extends string>({ label, options, value, onChange }: {
-    label: string; options: T[]; value: T; onChange: (v: T) => void;
+  const ChipSelect = ({ label, options, value, onChange }: {
+    label: string; options: string[]; value: string; onChange: (v: string) => void;
   }) => (
     <div>
       <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">{label}</p>
