@@ -1,32 +1,28 @@
-// Types for the StyleSense application
+// Types for StyleSense — Personal Wardrobe Assistant
 
-export interface ClothingItem {
+export type ClothingCategory = 'top' | 'bottom' | 'shoes' | 'outerwear' | 'accessories';
+
+export type StyleType = 'casual' | 'formal' | 'sporty' | 'streetwear' | 'minimalist' | 'bohemian' | 'vintage' | 'classic';
+
+export type OccasionType = 'school' | 'work' | 'gym' | 'party' | 'date' | 'outdoor' | 'everyday';
+
+export type FabricType = 'cotton' | 'denim' | 'polyester' | 'wool' | 'silk' | 'linen' | 'leather' | 'knit' | 'nylon' | 'other';
+
+export interface WardrobeItem {
   id: string;
+  userId: string;
   name: string;
   category: ClothingCategory;
   color: string;
   colorHex: string;
-  fabric: string;
+  fabric: FabricType;
   style: StyleType;
   occasion: OccasionType;
-  image: string;
-  description: string;
-  price: number;
-  rating: number;
-  tags: string[];
+  image: string; // base64 data URL or blob URL
+  addedAt: number;
+  wornCount: number;
+  lastWorn?: number;
 }
-
-export type ClothingCategory = 
-  | 'tops' | 'bottoms' | 'dresses' | 'outerwear' 
-  | 'shoes' | 'accessories' | 'activewear';
-
-export type StyleType = 
-  | 'casual' | 'formal' | 'streetwear' | 'minimalist' 
-  | 'bohemian' | 'sporty' | 'vintage' | 'classic';
-
-export type OccasionType = 
-  | 'casual' | 'formal' | 'sports' | 'party' 
-  | 'work' | 'date' | 'outdoor';
 
 export type BodyType = 'slim' | 'athletic' | 'average' | 'curvy' | 'plus-size';
 export type Gender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say';
@@ -40,29 +36,41 @@ export interface UserProfile {
   bodyType: BodyType;
   preferredStyles: StyleType[];
   favoriteColors: string[];
-  favoriteCategories: ClothingCategory[];
   occasionPreference: OccasionType[];
+  avatarInitial: string;
 }
 
-export interface UserRating {
+export interface GeneratedOutfit {
+  id: string;
   userId: string;
-  itemId: string;
-  rating: number; // 1-5
-  liked: boolean;
-  timestamp: number;
+  name: string;
+  items: WardrobeItem[];
+  occasion: OccasionType;
+  style: StyleType;
+  score: number;
+  reason: string;
+  createdAt: number;
 }
 
 export interface SavedOutfit {
   id: string;
-  userId: string;
-  name: string;
-  items: string[]; // item IDs
-  createdAt: number;
+  outfit: GeneratedOutfit;
+  savedAt: number;
+  wornDates: number[];
 }
 
-export interface Recommendation {
-  item: ClothingItem;
-  score: number;
-  reason: string;
-  algorithm: 'collaborative' | 'content-based' | 'hybrid';
+export interface OutfitHistory {
+  outfitId: string;
+  generatedAt: number;
+  saved: boolean;
+}
+
+// For collaborative filtering — simulated community wardrobe patterns
+export interface CommunityPattern {
+  id: string;
+  userName: string;
+  preferredStyles: StyleType[];
+  favoriteColors: string[];
+  // Outfit patterns: arrays of [category, color, style] tuples
+  outfitPatterns: { categories: ClothingCategory[]; colors: string[]; styles: StyleType[]; occasion: OccasionType }[];
 }
