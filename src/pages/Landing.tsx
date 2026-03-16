@@ -1,105 +1,124 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Users, Shirt } from 'lucide-react';
+import { ArrowRight, Sparkles, Users, Shirt, Camera } from 'lucide-react';
 import Navbar from '@/components/Navbar';
-import ClothingCard from '@/components/ClothingCard';
-import { clothingItems } from '@/data/clothing';
 
 const features = [
   {
+    icon: Camera,
+    title: 'Snap & Organize',
+    desc: 'Upload or photograph your clothes. Categorize by color, style, fabric, and occasion.',
+  },
+  {
     icon: Sparkles,
-    title: 'AI-Powered Suggestions',
-    desc: 'Content-based filtering analyzes color, fabric, style, and occasion to match your taste.',
+    title: 'Smart Outfit Generator',
+    desc: 'Content-based filtering creates outfits based on color harmony, style consistency, and occasion.',
   },
   {
     icon: Users,
     title: 'Collaborative Filtering',
-    desc: 'Discover what people with similar fashion sense are wearing and loving.',
+    desc: 'Learn from community patterns — discover outfit combinations similar users love.',
   },
   {
     icon: Shirt,
-    title: 'Outfit Generator',
-    desc: 'Automatically combine tops, bottoms, and shoes into cohesive outfits.',
+    title: 'Save & Track',
+    desc: 'Save your favorite outfits, track what you wear, and get better recommendations over time.',
   },
 ];
 
 export default function Landing() {
-  const featured = clothingItems.filter(i => i.rating >= 4.5).slice(0, 4);
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* Hero */}
       <section className="relative pt-16 overflow-hidden">
-        <div className="container mx-auto px-4 py-24 md:py-32 grid md:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-4 py-24 md:py-36 text-center max-w-3xl">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
             <p className="text-xs uppercase tracking-[0.3em] text-accent font-medium mb-4">
-              Personalized Fashion
+              Your Digital Wardrobe Assistant
             </p>
             <h1 className="text-4xl md:text-6xl font-display font-bold leading-[1.1] mb-6">
-              Your Style,{' '}
-              <span className="italic text-accent">Intelligently</span>{' '}
-              Curated
+              Never Ask{' '}
+              <span className="italic text-accent">"What Should I Wear?"</span>{' '}
+              Again
             </h1>
-            <p className="text-muted-foreground text-lg mb-8 max-w-md leading-relaxed">
-              StyleSense uses collaborative filtering and content-based machine learning to recommend
-              clothing that matches your unique taste.
+            <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+              StyleSense organizes your personal wardrobe and uses machine learning to generate
+              perfect outfit combinations from clothes you already own.
             </p>
-            <div className="flex gap-4">
-              <Link to="/catalog">
-                <Button size="lg" className="gap-2">
-                  Explore Catalog <ArrowRight className="h-4 w-4" />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/login">
+                <Button size="lg" className="gap-2 w-full sm:w-auto">
+                  Get Started <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link to="/recommendations">
-                <Button variant="outline" size="lg">
-                  Get Recommendations
+              <Link to="/wardrobe">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                  View Demo Wardrobe
                 </Button>
               </Link>
             </div>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="grid grid-cols-2 gap-3"
-          >
-            {featured.map((item, i) => (
-              <ClothingCard key={item.id} item={item} index={i} />
-            ))}
-          </motion.div>
         </div>
+
+        {/* Visual element */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="container mx-auto px-4 pb-16"
+        >
+          <div className="max-w-4xl mx-auto bg-card border border-border rounded-sm p-6 md:p-8">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">How It Works</p>
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="bg-secondary/50 rounded-sm p-4">
+                <div className="text-2xl mb-2">📸</div>
+                <p className="text-xs font-medium">1. Upload Clothes</p>
+                <p className="text-[10px] text-muted-foreground mt-1">Snap or upload photos</p>
+              </div>
+              <div className="bg-secondary/50 rounded-sm p-4">
+                <div className="text-2xl mb-2">🏷️</div>
+                <p className="text-xs font-medium">2. Label & Organize</p>
+                <p className="text-[10px] text-muted-foreground mt-1">Category, color, style</p>
+              </div>
+              <div className="bg-secondary/50 rounded-sm p-4">
+                <div className="text-2xl mb-2">✨</div>
+                <p className="text-xs font-medium">3. Get Outfits</p>
+                <p className="text-[10px] text-muted-foreground mt-1">AI generates combos</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-secondary/50">
+      <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.3em] text-accent font-medium mb-3">How It Works</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-accent font-medium mb-3">Core Features</p>
             <h2 className="text-3xl md:text-4xl font-display font-bold">
-              Smart Recommendations
+              Your Wardrobe, Smarter
             </h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="bg-card p-8 rounded-sm border border-border hover:border-accent/30 transition-colors"
+                transition={{ delay: i * 0.1 }}
+                className="bg-card p-6 rounded-sm border border-border hover:border-accent/30 transition-colors"
               >
-                <f.icon className="h-8 w-8 text-accent mb-4" />
-                <h3 className="font-display text-lg font-semibold mb-2">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                <f.icon className="h-7 w-7 text-accent mb-3" />
+                <h3 className="font-display text-base font-semibold mb-1.5">{f.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -110,14 +129,14 @@ export default function Landing() {
       <section className="py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-            Ready to Find Your Style?
+            Ready to Organize Your Closet?
           </h2>
           <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-            Set up your profile, browse the catalog, and let our algorithms do the rest.
+            Upload your clothes, let the algorithm work, and start wearing smarter outfits.
           </p>
           <Link to="/login">
             <Button size="lg" className="gap-2">
-              Get Started <ArrowRight className="h-4 w-4" />
+              Create Your Wardrobe <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -130,7 +149,7 @@ export default function Landing() {
             Style<span className="text-accent">Sense</span>
           </p>
           <p className="text-xs text-muted-foreground">
-            © 2026 StyleSense — Personalized Clothing Recommendation System. Thesis Project.
+            © 2026 StyleSense — Personalized Outfit Recommendation System. Thesis Project.
           </p>
         </div>
       </footer>

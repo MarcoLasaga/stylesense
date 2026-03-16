@@ -4,9 +4,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Landing from "./pages/Landing";
-import Catalog from "./pages/Catalog";
-import Recommendations from "./pages/Recommendations";
+import Wardrobe from "./pages/Wardrobe";
+import UploadClothes from "./pages/UploadClothes";
 import OutfitGenerator from "./pages/OutfitGenerator";
+import SavedOutfitsPage from "./pages/SavedOutfits";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
@@ -22,9 +23,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/recommendations" element={<Recommendations />} />
+          <Route path="/wardrobe" element={<Wardrobe />} />
+          <Route path="/upload" element={<UploadClothes />} />
           <Route path="/outfits" element={<OutfitGenerator />} />
+          <Route path="/saved" element={<SavedOutfitsPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />
