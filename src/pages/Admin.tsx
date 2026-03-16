@@ -1,132 +1,72 @@
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
-import { clothingItems } from '@/data/clothing';
-import { ClothingItem, ClothingCategory } from '@/lib/types';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
-import { simulatedUsers } from '@/data/clothing';
-import { getRatings } from '@/lib/store';
+import { getWardrobe, getSavedOutfits } from '@/lib/store';
+import { getWardrobeStats } from '@/lib/recommendation';
+import { WardrobeItem, ClothingCategory } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Package, Users } from 'lucide-react';
+import { BarChart3, Shirt, Settings } from 'lucide-react';
 
 export default function Admin() {
-  const [items, setItems] = useState(clothingItems);
-  const ratings = getRatings();
-
-  // New item form
-  const [newItem, setNewItem] = useState({
-    name: '', category: 'tops' as ClothingCategory, color: '', fabric: '',
-    style: 'casual', occasion: 'casual', price: '', description: '', image: ''
-  });
-
-  const handleAddItem = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success('Item added (demo mode - not persisted)');
-    setNewItem({ name: '', category: 'tops', color: '', fabric: '', style: 'casual', occasion: 'casual', price: '', description: '', image: '' });
-  };
-
-  const totalItems = items.length;
-  const totalUsers = simulatedUsers.length + 1;
-  const totalRatings = ratings.length;
-  const avgRating = items.reduce((sum, i) => sum + i.rating, 0) / items.length;
-  const categoryCounts = items.reduce((acc, i) => {
-    acc[i.category] = (acc[i.category] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const wardrobe = getWardrobe();
+  const saved = getSavedOutfits();
+  const stats = getWardrobeStats(wardrobe);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 pt-24 pb-16">
-        <h1 className="text-3xl font-display font-bold mb-2">Admin Dashboard</h1>
-        <p className="text-muted-foreground mb-8">Manage clothing items, users, and analytics</p>
+        <h1 className="text-3xl font-display font-bold mb-1">Dashboard</h1>
+        <p className="text-muted-foreground text-sm mb-8">Wardrobe analytics and system info</p>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
           {[
-            { label: 'Total Items', value: totalItems },
-            { label: 'Total Users', value: totalUsers },
-            { label: 'User Ratings', value: totalRatings },
-            { label: 'Avg Rating', value: avgRating.toFixed(1) },
-          ].map(stat => (
-            <div key={stat.label} className="bg-card border border-border p-4 rounded-sm">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</p>
-              <p className="text-2xl font-display font-bold mt-1">{stat.value}</p>
+            { label: 'Wardrobe Items', value: stats.totalItems },
+            { label: 'Saved Outfits', value: saved.length },
+            { label: 'Times Worn', value: stats.totalWorn },
+            { label: 'Top Color', value: stats.topColor },
+          ].map(s => (
+            <div key={s.label} className="bg-card border border-border p-4 rounded-sm">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</p>
+              <p className="text-xl font-display font-bold capitalize mt-1">{s.value}</p>
             </div>
           ))}
         </div>
 
-        <Tabs defaultValue="items">
+        <Tabs defaultValue="wardrobe">
           <TabsList className="mb-6">
-            <TabsTrigger value="items" className="gap-2"><Package className="h-3.5 w-3.5" /> Items</TabsTrigger>
-            <TabsTrigger value="users" className="gap-2"><Users className="h-3.5 w-3.5" /> Users</TabsTrigger>
+            <TabsTrigger value="wardrobe" className="gap-2"><Shirt className="h-3.5 w-3.5" /> Wardrobe</TabsTrigger>
             <TabsTrigger value="analytics" className="gap-2"><BarChart3 className="h-3.5 w-3.5" /> Analytics</TabsTrigger>
+            <TabsTrigger value="system" className="gap-2"><Settings className="h-3.5 w-3.5" /> System</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="items">
-            {/* Add item form */}
-            <div className="bg-card border border-border p-6 rounded-sm mb-6">
-              <h3 className="font-display font-semibold mb-4">Add New Item</h3>
-              <form onSubmit={handleAddItem} className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <Input placeholder="Name" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} required />
-                <Input placeholder="Color" value={newItem.color} onChange={e => setNewItem({ ...newItem, color: e.target.value })} required />
-                <Input placeholder="Fabric" value={newItem.fabric} onChange={e => setNewItem({ ...newItem, fabric: e.target.value })} required />
-                <Input placeholder="Price" type="number" value={newItem.price} onChange={e => setNewItem({ ...newItem, price: e.target.value })} required />
-                <Input placeholder="Image URL" value={newItem.image} onChange={e => setNewItem({ ...newItem, image: e.target.value })} />
-                <Textarea placeholder="Description" value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })} className="col-span-2 md:col-span-3" />
-                <Button type="submit" className="col-span-2 md:col-span-3">Add Item</Button>
-              </form>
-            </div>
-
-            {/* Item list */}
+          <TabsContent value="wardrobe">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Name</th>
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Category</th>
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Color</th>
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Price</th>
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Rating</th>
+                    {['Name', 'Category', 'Color', 'Style', 'Occasion', 'Worn'].map(h => (
+                      <th key={h} className="text-left py-2 text-[10px] uppercase tracking-widest text-muted-foreground">{h}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map(item => (
+                  {wardrobe.map(item => (
                     <tr key={item.id} className="border-b border-border/50">
-                      <td className="py-2">{item.name}</td>
+                      <td className="py-2 flex items-center gap-2">
+                        <div className="w-4 h-4 rounded-full border border-border" style={{ backgroundColor: item.colorHex }} />
+                        {item.name}
+                      </td>
                       <td className="py-2 capitalize">{item.category}</td>
                       <td className="py-2">{item.color}</td>
-                      <td className="py-2">${item.price.toFixed(2)}</td>
-                      <td className="py-2">{item.rating}</td>
+                      <td className="py-2 capitalize">{item.style}</td>
+                      <td className="py-2 capitalize">{item.occasion}</td>
+                      <td className="py-2">{item.wornCount}×</td>
                     </tr>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="users">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Name</th>
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Styles</th>
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Colors</th>
-                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground">Ratings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {simulatedUsers.map(user => (
-                    <tr key={user.id} className="border-b border-border/50">
-                      <td className="py-2">{user.name}</td>
-                      <td className="py-2 capitalize">{user.preferredStyles.join(', ')}</td>
-                      <td className="py-2">{user.favoriteColors.join(', ')}</td>
-                      <td className="py-2">{Object.keys(user.ratings).length} items</td>
-                    </tr>
-                  ))}
+                  {wardrobe.length === 0 && (
+                    <tr><td colSpan={6} className="py-8 text-center text-muted-foreground">No items yet</td></tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -134,29 +74,71 @@ export default function Admin() {
 
           <TabsContent value="analytics">
             <div className="grid md:grid-cols-2 gap-6">
+              {/* Category distribution */}
               <div className="bg-card border border-border p-6 rounded-sm">
                 <h3 className="font-display font-semibold mb-4">Items by Category</h3>
-                {Object.entries(categoryCounts).map(([cat, count]) => (
+                {Object.entries(stats.categoryCounts).length > 0 ? Object.entries(stats.categoryCounts).map(([cat, count]) => (
                   <div key={cat} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
                     <span className="capitalize text-sm">{cat}</span>
                     <div className="flex items-center gap-3">
                       <div className="w-24 h-2 bg-secondary rounded-full overflow-hidden">
-                        <div className="h-full bg-accent rounded-full" style={{ width: `${(count / totalItems) * 100}%` }} />
+                        <div className="h-full bg-accent rounded-full" style={{ width: `${(count / stats.totalItems) * 100}%` }} />
                       </div>
-                      <span className="text-sm text-muted-foreground w-8 text-right">{count}</span>
+                      <span className="text-sm text-muted-foreground w-6 text-right">{count}</span>
                     </div>
                   </div>
-                ))}
+                )) : <p className="text-sm text-muted-foreground">No data yet</p>}
               </div>
+
+              {/* Color distribution */}
               <div className="bg-card border border-border p-6 rounded-sm">
-                <h3 className="font-display font-semibold mb-4">System Info</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between"><span className="text-muted-foreground">Algorithm</span><span>Hybrid (CF + CB)</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Similarity Metric</span><span>Cosine Similarity</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">CF Weight</span><span>40%</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">CB Weight</span><span>60%</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Min Score Threshold</span><span>0.2</span></div>
-                </div>
+                <h3 className="font-display font-semibold mb-4">Colors in Wardrobe</h3>
+                {Object.entries(stats.colorCounts).length > 0 ? Object.entries(stats.colorCounts)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([color, count]) => (
+                  <div key={color} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                    <span className="text-sm">{color}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-24 h-2 bg-secondary rounded-full overflow-hidden">
+                        <div className="h-full bg-accent rounded-full" style={{ width: `${(count / stats.totalItems) * 100}%` }} />
+                      </div>
+                      <span className="text-sm text-muted-foreground w-6 text-right">{count}</span>
+                    </div>
+                  </div>
+                )) : <p className="text-sm text-muted-foreground">No data yet</p>}
+              </div>
+
+              {/* Style distribution */}
+              <div className="bg-card border border-border p-6 rounded-sm md:col-span-2">
+                <h3 className="font-display font-semibold mb-4">Style Distribution</h3>
+                {Object.entries(stats.styleCounts).length > 0 ? Object.entries(stats.styleCounts)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([sty, count]) => (
+                  <div key={sty} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                    <span className="capitalize text-sm">{sty}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-32 h-2 bg-secondary rounded-full overflow-hidden">
+                        <div className="h-full bg-accent rounded-full" style={{ width: `${(count / stats.totalItems) * 100}%` }} />
+                      </div>
+                      <span className="text-sm text-muted-foreground w-6 text-right">{count}</span>
+                    </div>
+                  </div>
+                )) : <p className="text-sm text-muted-foreground">No data yet</p>}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="system">
+            <div className="bg-card border border-border p-6 rounded-sm max-w-md">
+              <h3 className="font-display font-semibold mb-4">Algorithm Configuration</h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between"><span className="text-muted-foreground">Approach</span><span>Hybrid (CB + CF)</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Content-Based Weight</span><span>55%</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Collaborative Weight</span><span>45%</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Similarity Metric</span><span>Cosine Similarity</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Color Harmony</span><span>Group-based scoring</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Community Patterns</span><span>5 simulated users</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Data Storage</span><span>localStorage</span></div>
               </div>
             </div>
           </TabsContent>

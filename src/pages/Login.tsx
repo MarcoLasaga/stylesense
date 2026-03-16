@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { login, signup } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,13 +18,13 @@ export default function Login() {
     if (isSignup) {
       if (!name || !email || !password) { toast.error('All fields required'); return; }
       signup(name, email, password);
-      toast.success('Account created! Set up your profile.');
+      toast.success('Account created! Set up your style preferences.');
       navigate('/profile');
     } else {
       if (!email || !password) { toast.error('Email and password required'); return; }
       login(email, password);
       toast.success('Welcome back!');
-      navigate('/recommendations');
+      navigate('/wardrobe');
     }
   };
 
@@ -38,23 +38,23 @@ export default function Login() {
               {isSignup ? 'Create Account' : 'Welcome Back'}
             </h1>
             <p className="text-muted-foreground text-sm">
-              {isSignup ? 'Join StyleSense for personalized recommendations' : 'Sign in to access your style profile'}
+              {isSignup ? 'Start organizing your wardrobe' : 'Sign in to your digital closet'}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {isSignup && (
               <div>
-                <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Name</label>
+                <label className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1 block">Name</label>
                 <Input value={name} onChange={e => setName(e.target.value)} placeholder="Your name" />
               </div>
             )}
             <div>
-              <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Email</label>
+              <label className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1 block">Email</label>
               <Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Password</label>
+              <label className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1 block">Password</label>
               <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
             </div>
             <Button type="submit" className="w-full" size="lg">
