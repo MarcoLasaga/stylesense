@@ -135,7 +135,7 @@ export function collaborativeFilteringRecommend(
         algorithm: 'collaborative' as const
       };
     })
-    .filter((r): r is Recommendation => r !== null)
+    .filter((r): r is NonNullable<typeof r> => r !== null)
     .sort((a, b) => b.score - a.score)
     .slice(0, topN);
 

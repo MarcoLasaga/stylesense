@@ -1,5 +1,5 @@
 // Sample clothing dataset for StyleSense
-import { ClothingItem } from './types';
+import { ClothingItem } from '../lib/types';
 
 // Using placeholder image URLs with descriptive colors
 const img = (category: string, color: string, id: number) =>
