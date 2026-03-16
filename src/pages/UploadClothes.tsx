@@ -165,9 +165,9 @@ export default function UploadClothes() {
           </div>
 
           {/* Fabric, Style, Occasion */}
-          <ChipSelect label="Fabric" options={fabrics} value={fabric} onChange={setFabric} />
-          <ChipSelect label="Style" options={styles} value={style} onChange={setStyle} />
-          <ChipSelect label="Occasion" options={occasions} value={occasion} onChange={setOccasion} />
+          <ChipSelect label="Fabric" options={fabrics as unknown as string[]} value={fabric} onChange={v => setFabric(v as FabricType)} />
+          <ChipSelect label="Style" options={styles as unknown as string[]} value={style} onChange={v => setStyle(v as StyleType)} />
+          <ChipSelect label="Occasion" options={occasions as unknown as string[]} value={occasion} onChange={v => setOccasion(v as OccasionType)} />
 
           {/* Submit */}
           <div className="flex gap-3">
