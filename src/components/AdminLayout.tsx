@@ -2,15 +2,16 @@ import Navbar from '@/components/Navbar';
 import AdminSidebar from '@/components/AdminSidebar';
 import AdminRoute from '@/components/AdminRoute';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart3, Shirt, Users, Eye, Home, Menu, X } from 'lucide-react';
+import { BarChart3, Shirt, Users, Eye, Home, Menu, X, Activity, LayoutDashboard } from 'lucide-react';
 import { useState } from 'react';
 
 const links = [
-  { path: '/admin', label: 'Overview', icon: BarChart3 },
+  { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/admin/users', label: 'Users', icon: Users },
-  { path: '/admin/clothes', label: 'Clothes', icon: Shirt },
+  { path: '/admin/clothes', label: 'Wardrobe Data', icon: Shirt },
   { path: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-  { path: '/admin/algorithm', label: 'Algorithm', icon: Eye },
+  { path: '/admin/algorithm', label: 'Recommendations', icon: Eye },
+  { path: '/admin/performance', label: 'Performance', icon: Activity },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -26,7 +27,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           {/* Mobile nav */}
           <div className="lg:hidden fixed top-14 left-0 right-0 z-40 bg-card border-b border-border px-4 py-2 flex items-center justify-between">
-            <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Admin</span>
+            <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Admin Panel</span>
             <button onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>

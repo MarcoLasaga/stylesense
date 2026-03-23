@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login, signup } from '@/lib/store';
+import { login, signup, isAdmin } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -15,16 +15,25 @@ export default function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (isSignup) {
       if (!name || !email || !password) { toast.error('All fields required'); return; }
-      signup(name, email, password);
+      if (password.length < 4) { toast.error('Password must be at least 4 characters'); return; }
+      const ok = signup(name, email, password);
+      if (!ok) { toast.error('Email already taken'); return; }
       toast.success('Account created! Set up your style preferences.');
       navigate('/profile');
     } else {
       if (!email || !password) { toast.error('Email and password required'); return; }
-      login(email, password);
+      const ok = login(email, password);
+      if (!ok) { toast.error('Invalid email or password'); return; }
       toast.success('Welcome back!');
-      navigate('/wardrobe');
+      // Redirect admin to admin dashboard
+      if (isAdmin()) {
+        navigate('/admin');
+      } else {
+        navigate('/wardrobe');
+      }
     }
   };
 
@@ -61,6 +70,16 @@ export default function Login() {
               {isSignup ? 'Sign Up' : 'Sign In'}
             </Button>
           </form>
+
+          {!isSignup && (
+            <div className="mt-4 p-3 bg-secondary/50 rounded-sm border border-border">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Admin Access</p>
+              <p className="text-xs text-muted-foreground">
+                Email: <span className="font-medium text-foreground">admin@stylesense.com</span> · 
+                Password: <span className="font-medium text-foreground">admin123</span>
+              </p>
+            </div>
+          )}
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
