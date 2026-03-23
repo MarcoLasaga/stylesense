@@ -26,6 +26,7 @@ export interface WardrobeItem {
 
 export type BodyType = 'slim' | 'athletic' | 'average' | 'curvy' | 'plus-size';
 export type Gender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say';
+export type UserRole = 'user' | 'admin';
 
 export interface UserProfile {
   id: string;
@@ -38,6 +39,8 @@ export interface UserProfile {
   favoriteColors: string[];
   occasionPreference: OccasionType[];
   avatarInitial: string;
+  role: UserRole;
+  createdAt: number;
 }
 
 export interface GeneratedOutfit {
