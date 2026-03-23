@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, User, X } from 'lucide-react';
+import { Menu, User, X, Shield } from 'lucide-react';
 import { useState } from 'react';
-import { isLoggedIn } from '@/lib/store';
+import { isLoggedIn, isAdmin } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 
 const navItems = [
@@ -16,6 +16,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const loggedIn = isLoggedIn();
+  const admin = isAdmin();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -44,9 +45,13 @@ export default function Navbar() {
               <Link to="/profile">
                 <Button variant="ghost" size="icon" className="h-8 w-8"><User className="h-4 w-4" /></Button>
               </Link>
-              <Link to="/admin">
-                <Button variant="ghost" size="sm" className="text-[10px]">Dashboard</Button>
-              </Link>
+              {admin && (
+                <Link to="/admin">
+                  <Button variant="ghost" size="sm" className="text-[10px] gap-1.5">
+                    <Shield className="h-3 w-3" /> Admin
+                  </Button>
+                </Link>
+              )}
             </>
           ) : (
             <Link to="/login"><Button variant="outline" size="sm">Sign In</Button></Link>
@@ -70,7 +75,11 @@ export default function Navbar() {
             {loggedIn ? (
               <>
                 <Link to="/profile" onClick={() => setOpen(false)}><Button variant="outline" size="sm">Profile</Button></Link>
-                <Link to="/admin" onClick={() => setOpen(false)}><Button variant="ghost" size="sm">Dashboard</Button></Link>
+                {admin && (
+                  <Link to="/admin" onClick={() => setOpen(false)}>
+                    <Button variant="ghost" size="sm" className="gap-1.5"><Shield className="h-3 w-3" /> Admin</Button>
+                  </Link>
+                )}
               </>
             ) : (
               <Link to="/login" onClick={() => setOpen(false)}><Button variant="outline" size="sm">Sign In</Button></Link>

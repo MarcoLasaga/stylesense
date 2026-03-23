@@ -1,12 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart3, Shirt, Users, Settings, Shield, Home, Eye } from 'lucide-react';
+import { BarChart3, Shirt, Users, Shield, Home, Eye, Activity, LayoutDashboard } from 'lucide-react';
 
 const links = [
-  { path: '/admin', label: 'Overview', icon: BarChart3 },
+  { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/admin/users', label: 'Users', icon: Users },
-  { path: '/admin/clothes', label: 'Clothing Items', icon: Shirt },
+  { path: '/admin/clothes', label: 'Wardrobe Data', icon: Shirt },
   { path: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-  { path: '/admin/algorithm', label: 'Algorithm', icon: Eye },
+  { path: '/admin/algorithm', label: 'Recommendations', icon: Eye },
+  { path: '/admin/performance', label: 'Performance', icon: Activity },
 ];
 
 export default function AdminSidebar() {
@@ -19,6 +20,7 @@ export default function AdminSidebar() {
           <Shield className="h-4 w-4 text-accent" />
           <span className="font-display font-bold text-sm">Admin Panel</span>
         </div>
+        <p className="text-[10px] text-muted-foreground mt-1">System Evaluation & Monitoring</p>
       </div>
       <nav className="flex-1 p-3 space-y-1">
         {links.map(l => {
