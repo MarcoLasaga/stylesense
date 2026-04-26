@@ -77,15 +77,16 @@ export async function postOutfit(outfit: GeneratedOutfit, caption: string): Prom
   const uid = await getCurrentUserId();
   if (!uid) return null;
   const cover = outfit.items.find(i => i.image)?.image ?? null;
-  const { data, error } = await supabase.from('shared_outfits').insert({
+  const insertRow = {
     user_id: uid,
     name: outfit.name,
     caption,
     style: outfit.style,
     occasion: outfit.occasion,
-    items: outfit.items as unknown as object,
+    items: outfit.items as unknown as never,
     cover_image: cover,
-  }).select('id').single();
+  };
+  const { data, error } = await supabase.from('shared_outfits').insert(insertRow).select('id').single();
   if (error) { console.error('postOutfit', error); return null; }
   return data.id;
 }
