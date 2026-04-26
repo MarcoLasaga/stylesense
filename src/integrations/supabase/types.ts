@@ -14,16 +14,258 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      fit_feedback: {
+        Row: {
+          created_at: string
+          fit: string
+          id: string
+          item_id: string
+          item_size: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          fit: string
+          id?: string
+          item_id: string
+          item_size: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          fit?: string
+          id?: string
+          item_id?: string
+          item_size?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      outfit_likes: {
+        Row: {
+          created_at: string
+          id: string
+          outfit_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          outfit_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          outfit_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outfit_likes_outfit_id_fkey"
+            columns: ["outfit_id"]
+            isOneToOne: false
+            referencedRelation: "shared_outfits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outfit_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          outfit_id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          outfit_id: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          outfit_id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outfit_ratings_outfit_id_fkey"
+            columns: ["outfit_id"]
+            isOneToOne: false
+            referencedRelation: "shared_outfits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outfit_saves: {
+        Row: {
+          created_at: string
+          id: string
+          outfit_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          outfit_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          outfit_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outfit_saves_outfit_id_fkey"
+            columns: ["outfit_id"]
+            isOneToOne: false
+            referencedRelation: "shared_outfits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_initial: string
+          created_at: string
+          current_size: string
+          display_name: string
+          id: string
+          preferred_styles: string[]
+          updated_at: string
+        }
+        Insert: {
+          avatar_initial?: string
+          created_at?: string
+          current_size?: string
+          display_name?: string
+          id: string
+          preferred_styles?: string[]
+          updated_at?: string
+        }
+        Update: {
+          avatar_initial?: string
+          created_at?: string
+          current_size?: string
+          display_name?: string
+          id?: string
+          preferred_styles?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shared_outfits: {
+        Row: {
+          caption: string | null
+          cover_image: string | null
+          created_at: string
+          id: string
+          items: Json
+          like_count: number
+          name: string
+          occasion: string
+          rating_avg: number
+          rating_count: number
+          save_count: number
+          style: string
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          cover_image?: string | null
+          created_at?: string
+          id?: string
+          items: Json
+          like_count?: number
+          name: string
+          occasion: string
+          rating_avg?: number
+          rating_count?: number
+          save_count?: number
+          style: string
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          cover_image?: string | null
+          created_at?: string
+          id?: string
+          items?: Json
+          like_count?: number
+          name?: string
+          occasion?: string
+          rating_avg?: number
+          rating_count?: number
+          save_count?: number
+          style?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wear_log: {
+        Row: {
+          id: string
+          item_id: string
+          outfit_signature: string | null
+          user_id: string
+          worn_at: string
+        }
+        Insert: {
+          id?: string
+          item_id: string
+          outfit_signature?: string | null
+          user_id: string
+          worn_at?: string
+        }
+        Update: {
+          id?: string
+          item_id?: string
+          outfit_signature?: string | null
+          user_id?: string
+          worn_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +392,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
