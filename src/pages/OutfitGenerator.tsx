@@ -1,15 +1,17 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import WardrobeCard from '@/components/WardrobeCard';
 import { getWardrobe, getProfile, saveOutfit as saveOutfitToStore } from '@/lib/store';
 import { generateOutfits, randomOutfit } from '@/lib/recommendation';
-import { GeneratedOutfit, OccasionType } from '@/lib/types';
+import { GeneratedOutfit, OccasionType, WeatherContext } from '@/lib/types';
+import { getWeatherCached } from '@/lib/weather';
+import { computeTrendSnapshot, TrendSnapshot } from '@/lib/trends';
+import { getSocialAffinity, postOutfit } from '@/lib/socialStore';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Save, Check, Shuffle, Sparkles } from 'lucide-react';
+import { RefreshCw, Save, Check, Shuffle, Sparkles, Share2, Cloud, CloudRain, Sun, Snowflake, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const occasions: (OccasionType | 'any')[] = ['any', 'school', 'work', 'gym', 'party', 'date', 'outdoor', 'everyday'];
 
@@ -20,15 +22,30 @@ export default function OutfitGenerator() {
   const [key, setKey] = useState(0);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [surprise, setSurprise] = useState<GeneratedOutfit | null>(null);
+  const [weather, setWeather] = useState<WeatherContext | null>(null);
+  const [trends, setTrends] = useState<TrendSnapshot | null>(null);
+  const [social, setSocial] = useState<{ styles: Record<string, number>; colors: Record<string, number> }>({ styles: {}, colors: {} });
+  const [excludeRecent, setExcludeRecent] = useState(false);
+  const [useWeather, setUseWeather] = useState(true);
+
+  useEffect(() => {
+    Promise.all([getWeatherCached(), computeTrendSnapshot(), getSocialAffinity()])
+      .then(([w, t, s]) => { setWeather(w); setTrends(t); setSocial(s); });
+  }, []);
 
   const outfits = useMemo(() => {
     if (wardrobe.length < 2) return [];
     return generateOutfits(wardrobe, profile, {
       occasion: occasion === 'any' ? undefined : occasion as OccasionType,
       count: 9,
-      includeOuterwear: true,
+      includeOuterwear: useWeather && weather ? (weather.condition === 'cool' || weather.condition === 'cold' || weather.precipitation === 'rain') : true,
+      weather: useWeather ? (weather ?? undefined) : undefined,
+      trends: trends ?? undefined,
+      socialAffinity: social,
+      excludeRecentlyWorn: excludeRecent,
     });
-  }, [key, occasion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, occasion, weather, trends, social, excludeRecent, useWeather]);
 
   const handleSave = (outfit: GeneratedOutfit) => {
     saveOutfitToStore(outfit);
@@ -36,10 +53,23 @@ export default function OutfitGenerator() {
     toast.success('Outfit saved!');
   };
 
+  const handleShare = async (outfit: GeneratedOutfit) => {
+    const id = await postOutfit(outfit, '');
+    if (id) toast.success('Shared to the community feed!');
+    else toast.error('Sign in to share outfits');
+  };
+
   const handleSurprise = () => {
     const r = randomOutfit(wardrobe, profile);
     setSurprise(r);
     if (r) toast('🎲 Surprise outfit generated!');
+  };
+
+  const WeatherIcon = ({ w }: { w: WeatherContext }) => {
+    if (w.precipitation === 'snow') return <Snowflake className="h-4 w-4" />;
+    if (w.precipitation === 'rain') return <CloudRain className="h-4 w-4" />;
+    if (w.condition === 'hot' || w.condition === 'warm') return <Sun className="h-4 w-4" />;
+    return <Cloud className="h-4 w-4" />;
   };
 
   if (wardrobe.length < 2) {
@@ -63,9 +93,9 @@ export default function OutfitGenerator() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-display font-bold mb-1">Outfit Generator</h1>
-            <p className="text-muted-foreground text-sm">Smart combinations from your wardrobe</p>
+            <p className="text-muted-foreground text-sm">Hybrid recommendations from your wardrobe</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button variant="outline" size="sm" className="gap-2" onClick={handleSurprise}>
               <Shuffle className="h-3.5 w-3.5" /> Surprise Me
             </Button>
@@ -74,6 +104,44 @@ export default function OutfitGenerator() {
             </Button>
           </div>
         </div>
+
+        {/* Context bar */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          {weather && (
+            <button
+              onClick={() => setUseWeather(v => !v)}
+              className={`flex items-center gap-2 p-3 border rounded-sm text-left transition-colors ${
+                useWeather ? 'border-accent bg-accent/5' : 'border-border bg-card'
+              }`}
+            >
+              <WeatherIcon w={weather} />
+              <div className="flex-1">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Weather Context {useWeather ? '· On' : '· Off'}</p>
+                <p className="text-xs font-medium">{weather.tempC}°C · {weather.description}</p>
+              </div>
+            </button>
+          )}
+          <button
+            onClick={() => setExcludeRecent(v => !v)}
+            className={`flex items-center gap-2 p-3 border rounded-sm text-left transition-colors ${
+              excludeRecent ? 'border-accent bg-accent/5' : 'border-border bg-card'
+            }`}
+          >
+            <RefreshCw className="h-4 w-4" />
+            <div className="flex-1">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Anti-Repetition {excludeRecent ? '· On' : '· Off'}</p>
+              <p className="text-xs font-medium">Hide recently-worn items</p>
+            </div>
+          </button>
+        </div>
+
+        {/* Trend pill */}
+        {trends && trends.topStyles.length > 0 && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
+            <TrendingUp className="h-3.5 w-3.5 text-accent" />
+            Trending now: {trends.topStyles.slice(0, 3).map(s => s.value).join(', ')}
+          </div>
+        )}
 
         {/* Occasion filter */}
         <div className="mb-8">
@@ -126,13 +194,18 @@ export default function OutfitGenerator() {
             >
               <div className="flex items-center justify-between mb-1">
                 <h3 className="font-display font-semibold text-sm">{outfit.name}</h3>
-                <Button
-                  variant="ghost" size="icon" className="h-7 w-7"
-                  onClick={() => handleSave(outfit)}
-                  disabled={savedIds.has(outfit.id)}
-                >
-                  {savedIds.has(outfit.id) ? <Check className="h-3.5 w-3.5 text-accent" /> : <Save className="h-3.5 w-3.5" />}
-                </Button>
+                <div className="flex gap-0.5">
+                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleShare(outfit)} title="Share to feed">
+                    <Share2 className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost" size="icon" className="h-7 w-7"
+                    onClick={() => handleSave(outfit)}
+                    disabled={savedIds.has(outfit.id)}
+                  >
+                    {savedIds.has(outfit.id) ? <Check className="h-3.5 w-3.5 text-accent" /> : <Save className="h-3.5 w-3.5" />}
+                  </Button>
+                </div>
               </div>
               <p className="text-xs text-accent mb-3">{outfit.reason}</p>
               <div className="grid grid-cols-3 gap-2 mb-3">

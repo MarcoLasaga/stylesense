@@ -1,20 +1,33 @@
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { getSavedOutfits, removeSavedOutfit, markOutfitWorn } from '@/lib/store';
-import { SavedOutfit } from '@/lib/types';
+import { SavedOutfit, FitFeedback, WardrobeItem } from '@/lib/types';
 import WardrobeCard from '@/components/WardrobeCard';
 import { Button } from '@/components/ui/button';
-import { Trash2, CheckCircle } from 'lucide-react';
+import { Trash2, CheckCircle, Share2, Smile } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { recordWear } from '@/lib/frequency';
+import { recordFitFeedback } from '@/lib/sizeAdaptation';
+import { logWear, logFitFeedback, postOutfit } from '@/lib/socialStore';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+
+const FIT_LABELS: { value: FitFeedback; label: string; emoji: string }[] = [
+  { value: 'too_tight', label: 'Too tight', emoji: '🤏' },
+  { value: 'perfect', label: 'Perfect', emoji: '👌' },
+  { value: 'too_loose', label: 'Too loose', emoji: '🫳' },
+];
 
 export default function SavedOutfitsPage() {
   const [outfits, setOutfits] = useState<SavedOutfit[]>([]);
+  const [shareTarget, setShareTarget] = useState<SavedOutfit | null>(null);
+  const [caption, setCaption] = useState('');
 
-  useEffect(() => {
-    setOutfits(getSavedOutfits());
-  }, []);
+  useEffect(() => { setOutfits(getSavedOutfits()); }, []);
 
   const handleRemove = (id: string) => {
     removeSavedOutfit(id);
@@ -22,10 +35,30 @@ export default function SavedOutfitsPage() {
     toast.success('Outfit removed');
   };
 
-  const handleWorn = (id: string) => {
-    markOutfitWorn(id);
+  const handleWorn = async (saved: SavedOutfit) => {
+    markOutfitWorn(saved.id);
+    recordWear(saved.outfit.items);   // local frequency tracker
+    await logWear(saved.outfit.items); // cloud mirror
     setOutfits(getSavedOutfits());
-    toast.success('Marked as worn! Stats updated.');
+    toast.success('Marked as worn — recommender will avoid these for a few days');
+  };
+
+  const handleFit = async (item: WardrobeItem, fit: FitFeedback) => {
+    recordFitFeedback(item.id, item.size, fit);
+    await logFitFeedback(item.id, item.size, fit);
+    toast.success(`Recorded fit: ${fit.replace('_', ' ')}`);
+  };
+
+  const handleShare = async () => {
+    if (!shareTarget) return;
+    const id = await postOutfit(shareTarget.outfit, caption);
+    if (id) {
+      toast.success('Posted to the feed!');
+      setShareTarget(null);
+      setCaption('');
+    } else {
+      toast.error('Sign in to share outfits');
+    }
   };
 
   return (
@@ -54,8 +87,11 @@ export default function SavedOutfitsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-display font-semibold text-sm">{saved.outfit.name}</h3>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleWorn(saved.id)} title="Mark as worn">
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleWorn(saved)} title="Mark as worn">
                       <CheckCircle className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShareTarget(saved)} title="Share to feed">
+                      <Share2 className="h-3.5 w-3.5" />
                     </Button>
                     <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => handleRemove(saved.id)}>
                       <Trash2 className="h-3.5 w-3.5" />
@@ -74,7 +110,34 @@ export default function SavedOutfitsPage() {
                     ))}
                   </div>
                 )}
-                <div className="flex justify-between text-[10px] text-muted-foreground pt-2 border-t border-border">
+
+                {/* Fit feedback per item — fuels size adaptation */}
+                <div className="border-t border-border pt-3 mt-2">
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-1">
+                    <Smile className="h-3 w-3" /> How does each item fit?
+                  </p>
+                  <div className="space-y-1.5">
+                    {saved.outfit.items.map(item => (
+                      <div key={item.id} className="flex items-center justify-between gap-2">
+                        <span className="text-[11px] truncate flex-1">{item.name} <span className="text-muted-foreground">({item.size})</span></span>
+                        <div className="flex gap-1">
+                          {FIT_LABELS.map(f => (
+                            <button
+                              key={f.value}
+                              onClick={() => handleFit(item, f.value)}
+                              className="text-xs px-1.5 py-0.5 rounded-sm bg-secondary hover:bg-secondary/70"
+                              title={f.label}
+                            >
+                              {f.emoji}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-between text-[10px] text-muted-foreground pt-2 border-t border-border mt-3">
                   <span>Worn {saved.wornDates.length} time{saved.wornDates.length !== 1 ? 's' : ''}</span>
                   <span>Saved {new Date(saved.savedAt).toLocaleDateString()}</span>
                 </div>
@@ -82,6 +145,28 @@ export default function SavedOutfitsPage() {
             ))}
           </div>
         )}
+
+        {/* Share dialog */}
+        <Dialog open={!!shareTarget} onOpenChange={(o) => !o && setShareTarget(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Share to community feed</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground mb-2">
+              Posting <span className="font-medium text-foreground">{shareTarget?.outfit.name}</span> to the StyleSense feed.
+            </p>
+            <Input
+              placeholder="Add a caption (optional)…"
+              value={caption}
+              onChange={e => setCaption(e.target.value)}
+              maxLength={200}
+            />
+            <div className="flex justify-end gap-2 mt-2">
+              <Button variant="outline" size="sm" onClick={() => setShareTarget(null)}>Cancel</Button>
+              <Button size="sm" onClick={handleShare}>Post</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
