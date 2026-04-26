@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import { addWardrobeItem, getProfile } from '@/lib/store';
-import { WardrobeItem, ClothingCategory, StyleType, OccasionType, FabricType } from '@/lib/types';
+import { WardrobeItem, ClothingCategory, StyleType, OccasionType, FabricType, ClothingSize, ALL_SIZES } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Camera, Upload, Check } from 'lucide-react';
@@ -32,6 +32,7 @@ export default function UploadClothes() {
   const [fabric, setFabric] = useState<FabricType>('cotton');
   const [style, setStyle] = useState<StyleType>('casual');
   const [occasion, setOccasion] = useState<OccasionType>('everyday');
+  const [size, setSize] = useState<ClothingSize>(getProfile().currentSize || 'M');
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,6 +57,7 @@ export default function UploadClothes() {
       fabric,
       style,
       occasion,
+      size,
       image: imagePreview,
       addedAt: Date.now(),
       wornCount: 0,
@@ -168,6 +170,7 @@ export default function UploadClothes() {
           <ChipSelect label="Fabric" options={fabrics as unknown as string[]} value={fabric} onChange={v => setFabric(v as FabricType)} />
           <ChipSelect label="Style" options={styles as unknown as string[]} value={style} onChange={v => setStyle(v as StyleType)} />
           <ChipSelect label="Occasion" options={occasions as unknown as string[]} value={occasion} onChange={v => setOccasion(v as OccasionType)} />
+          <ChipSelect label="Size" options={ALL_SIZES as unknown as string[]} value={size} onChange={v => setSize(v as ClothingSize)} />
 
           {/* Submit */}
           <div className="flex gap-3">

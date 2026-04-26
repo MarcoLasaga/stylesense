@@ -11,6 +11,8 @@ import SavedOutfitsPage from "./pages/SavedOutfits";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Feed from "./pages/Feed";
+import Planner from "./pages/Planner";
 
 // Admin pages
 import AdminOverview from "./pages/admin/AdminOverview";
@@ -34,6 +36,8 @@ const App = () => (
           <Route path="/upload" element={<UploadClothes />} />
           <Route path="/outfits" element={<OutfitGenerator />} />
           <Route path="/saved" element={<SavedOutfitsPage />} />
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/planner" element={<Planner />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           {/* Admin routes */}

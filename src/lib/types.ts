@@ -8,6 +8,11 @@ export type OccasionType = 'school' | 'work' | 'gym' | 'party' | 'date' | 'outdo
 
 export type FabricType = 'cotton' | 'denim' | 'polyester' | 'wool' | 'silk' | 'linen' | 'leather' | 'knit' | 'nylon' | 'other';
 
+export type ClothingSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
+export const ALL_SIZES: ClothingSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
+export type FitFeedback = 'too_tight' | 'perfect' | 'too_loose';
+
 export interface WardrobeItem {
   id: string;
   userId: string;
@@ -18,6 +23,7 @@ export interface WardrobeItem {
   fabric: FabricType;
   style: StyleType;
   occasion: OccasionType;
+  size: ClothingSize;
   image: string; // base64 data URL or blob URL
   addedAt: number;
   wornCount: number;
@@ -35,6 +41,7 @@ export interface UserProfile {
   age: number;
   gender: Gender;
   bodyType: BodyType;
+  currentSize: ClothingSize;
   preferredStyles: StyleType[];
   favoriteColors: string[];
   occasionPreference: OccasionType[];
@@ -74,6 +81,48 @@ export interface CommunityPattern {
   userName: string;
   preferredStyles: StyleType[];
   favoriteColors: string[];
-  // Outfit patterns: arrays of [category, color, style] tuples
   outfitPatterns: { categories: ClothingCategory[]; colors: string[]; styles: StyleType[]; occasion: OccasionType }[];
+}
+
+// ── Weather context ─────────────────────────────────────
+export interface WeatherContext {
+  tempC: number;
+  condition: 'hot' | 'warm' | 'mild' | 'cool' | 'cold';
+  precipitation: 'none' | 'rain' | 'snow';
+  description: string;
+  city?: string;
+}
+
+// ── Social feed (Lovable Cloud) ─────────────────────────
+export interface SharedOutfit {
+  id: string;
+  user_id: string;
+  name: string;
+  caption: string | null;
+  style: string;
+  occasion: string;
+  items: WardrobeItem[];
+  cover_image: string | null;
+  like_count: number;
+  rating_avg: number;
+  rating_count: number;
+  save_count: number;
+  created_at: string;
+  // Augmented client-side:
+  display_name?: string;
+  avatar_initial?: string;
+  liked_by_me?: boolean;
+  saved_by_me?: boolean;
+  my_rating?: number;
+}
+
+// ── Recommendation explanation (for transparency view) ───
+export interface RecommendationBreakdown {
+  contentScore: number;
+  collaborativeScore: number;
+  trendScore: number;
+  frequencyPenalty: number;
+  weatherFit: number;
+  finalScore: number;
+  factors: string[];
 }

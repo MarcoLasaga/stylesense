@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { getProfile, saveProfile, isLoggedIn, logout } from '@/lib/store';
 import { getWardrobeStats } from '@/lib/recommendation';
 import { getWardrobe, getSavedOutfits } from '@/lib/store';
-import { UserProfile, StyleType, OccasionType, BodyType, Gender } from '@/lib/types';
+import { UserProfile, StyleType, OccasionType, BodyType, Gender, ClothingSize, ALL_SIZES } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { inferUserSize } from '@/lib/sizeAdaptation';
+import { pushLocalProfileToCloud } from '@/lib/socialStore';
+import { frequencyStats } from '@/lib/frequency';
 
 const styles: StyleType[] = ['casual', 'formal', 'sporty', 'streetwear', 'minimalist', 'bohemian', 'vintage', 'classic'];
 const occasions: OccasionType[] = ['school', 'work', 'gym', 'party', 'date', 'outdoor', 'everyday'];
@@ -40,10 +43,27 @@ export default function Profile() {
   const wardrobe = getWardrobe();
   const stats = getWardrobeStats(wardrobe);
   const savedCount = getSavedOutfits().length;
+  const freq = frequencyStats();
+  const [sizeSuggestion, setSizeSuggestion] = useState(inferUserSize(profile.currentSize));
 
-  const handleSave = () => {
+  useEffect(() => {
+    setSizeSuggestion(inferUserSize(profile.currentSize));
+  }, [profile.currentSize]);
+
+  const handleSave = async () => {
     saveProfile(profile);
+    await pushLocalProfileToCloud();
     toast.success('Profile saved! Outfit suggestions updated.');
+  };
+
+  const acceptSizeSuggestion = async () => {
+    if (!sizeSuggestion) return;
+    const updated = { ...profile, currentSize: sizeSuggestion.suggested };
+    setProfile(updated);
+    saveProfile(updated);
+    await pushLocalProfileToCloud();
+    toast.success(`Size updated to ${sizeSuggestion.suggested}`);
+    setSizeSuggestion(null);
   };
 
   const handleLogout = () => {
@@ -64,13 +84,28 @@ export default function Profile() {
           {isLoggedIn() && <Button variant="ghost" size="sm" onClick={handleLogout}>Log Out</Button>}
         </div>
 
+        {/* Size adaptation suggestion */}
+        {sizeSuggestion && (
+          <div className="bg-accent/10 border border-accent/30 rounded-sm p-4 mb-6 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-accent mb-1">Size Suggestion</p>
+              <p className="text-sm font-medium">Update your size from {profile.currentSize} → {sizeSuggestion.suggested}?</p>
+              <p className="text-xs text-muted-foreground mt-1">{sizeSuggestion.reason}</p>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <Button size="sm" variant="outline" onClick={() => setSizeSuggestion(null)}>Dismiss</Button>
+              <Button size="sm" onClick={acceptSizeSuggestion}>Accept</Button>
+            </div>
+          </div>
+        )}
+
         {/* Wardrobe Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {[
             { label: 'Wardrobe Items', value: stats.totalItems },
             { label: 'Saved Outfits', value: savedCount },
-            { label: 'Most Worn Color', value: stats.topColor },
-            { label: 'Top Style', value: stats.topStyle },
+            { label: 'Current Size', value: profile.currentSize },
+            { label: 'Wears (14d)', value: freq.recentWears },
           ].map(s => (
             <div key={s.label} className="bg-card border border-border p-4 rounded-sm">
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -113,6 +148,18 @@ export default function Profile() {
                     }`}>{b}</button>
                 ))}
               </div>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">Current Size</p>
+            <div className="flex flex-wrap gap-2">
+              {ALL_SIZES.map(sz => (
+                <button key={sz} type="button" onClick={() => setProfile({ ...profile, currentSize: sz })}
+                  className={`text-xs px-3 py-1.5 rounded-sm transition-colors ${
+                    profile.currentSize === sz ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
+                  }`}>{sz}</button>
+              ))}
             </div>
           </div>
 
