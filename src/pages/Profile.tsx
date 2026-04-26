@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { getProfile, saveProfile, isLoggedIn, logout } from '@/lib/store';
 import { getWardrobeStats } from '@/lib/recommendation';
 import { getWardrobe, getSavedOutfits } from '@/lib/store';
-import { UserProfile, StyleType, OccasionType, BodyType, Gender } from '@/lib/types';
+import { UserProfile, StyleType, OccasionType, BodyType, Gender, ClothingSize, ALL_SIZES } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { inferUserSize } from '@/lib/sizeAdaptation';
+import { pushLocalProfileToCloud } from '@/lib/socialStore';
+import { frequencyStats } from '@/lib/frequency';
 
 const styles: StyleType[] = ['casual', 'formal', 'sporty', 'streetwear', 'minimalist', 'bohemian', 'vintage', 'classic'];
 const occasions: OccasionType[] = ['school', 'work', 'gym', 'party', 'date', 'outdoor', 'everyday'];
@@ -40,10 +43,27 @@ export default function Profile() {
   const wardrobe = getWardrobe();
   const stats = getWardrobeStats(wardrobe);
   const savedCount = getSavedOutfits().length;
+  const freq = frequencyStats();
+  const [sizeSuggestion, setSizeSuggestion] = useState(inferUserSize(profile.currentSize));
 
-  const handleSave = () => {
+  useEffect(() => {
+    setSizeSuggestion(inferUserSize(profile.currentSize));
+  }, [profile.currentSize]);
+
+  const handleSave = async () => {
     saveProfile(profile);
+    await pushLocalProfileToCloud();
     toast.success('Profile saved! Outfit suggestions updated.');
+  };
+
+  const acceptSizeSuggestion = async () => {
+    if (!sizeSuggestion) return;
+    const updated = { ...profile, currentSize: sizeSuggestion.suggested };
+    setProfile(updated);
+    saveProfile(updated);
+    await pushLocalProfileToCloud();
+    toast.success(`Size updated to ${sizeSuggestion.suggested}`);
+    setSizeSuggestion(null);
   };
 
   const handleLogout = () => {
