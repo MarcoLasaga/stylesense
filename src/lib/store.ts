@@ -23,6 +23,7 @@ const defaultAdmin: UserProfile = {
   age: 30,
   gender: 'prefer-not-to-say',
   bodyType: 'average',
+  currentSize: 'M',
   preferredStyles: ['casual'],
   favoriteColors: ['Black', 'White'],
   occasionPreference: ['everyday'],
@@ -52,6 +53,7 @@ const defaultProfile: UserProfile = {
   age: 22,
   gender: 'prefer-not-to-say',
   bodyType: 'average',
+  currentSize: 'M',
   preferredStyles: ['casual'],
   favoriteColors: ['Black', 'White'],
   occasionPreference: ['everyday'],
@@ -67,6 +69,7 @@ export const getProfile = (): UserProfile => {
     // Backfill role for legacy profiles
     if (!parsed.role) parsed.role = 'user';
     if (!parsed.createdAt) parsed.createdAt = Date.now();
+    if (!parsed.currentSize) parsed.currentSize = 'M';
     return parsed;
   }
   return defaultProfile;
