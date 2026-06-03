@@ -7,8 +7,10 @@ import { GeneratedOutfit, OccasionType, WeatherContext } from '@/lib/types';
 import { getWeatherCached } from '@/lib/weather';
 import { computeTrendSnapshot, TrendSnapshot } from '@/lib/trends';
 import { getSocialAffinity, postOutfit } from '@/lib/socialStore';
+import { recordFeedback } from '@/lib/feedback';
+import RecommendationBreakdownPanel from '@/components/RecommendationBreakdownPanel';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Save, Check, Shuffle, Sparkles, Share2, Cloud, CloudRain, Sun, Snowflake, TrendingUp } from 'lucide-react';
+import { RefreshCw, Save, Check, Shuffle, Sparkles, Share2, Cloud, CloudRain, Sun, Snowflake, TrendingUp, Heart, ThumbsDown, Ban } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
@@ -223,6 +225,33 @@ export default function OutfitGenerator() {
               <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-2 border-t border-border">
                 <span className="capitalize">{outfit.style} · {outfit.occasion}</span>
                 <span>Match: {Math.round(outfit.score * 100)}%</span>
+              </div>
+
+              <RecommendationBreakdownPanel breakdown={outfit.breakdown} />
+
+              {/* Feedback Learning System */}
+              <div className="flex items-center gap-1 mt-3 pt-3 border-t border-border">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground mr-auto">Feedback</span>
+                <Button variant="ghost" size="icon" className="h-7 w-7"
+                  title="Love this outfit"
+                  onClick={() => { recordFeedback(outfit, 'loved'); toast.success('Thanks — we\'ll show more like this'); }}>
+                  <Heart className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7"
+                  title="Mark as worn"
+                  onClick={() => { recordFeedback(outfit, 'wore'); toast('Logged as worn'); }}>
+                  <Check className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7"
+                  title="Not my style"
+                  onClick={() => { recordFeedback(outfit, 'disliked'); toast('Got it — adjusting recommendations'); }}>
+                  <ThumbsDown className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7"
+                  title="Never recommend again"
+                  onClick={() => { recordFeedback(outfit, 'banned'); toast('This combo won\'t appear again'); setKey(k => k + 1); }}>
+                  <Ban className="h-3.5 w-3.5" />
+                </Button>
               </div>
             </motion.div>
           ))}

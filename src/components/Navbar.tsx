@@ -14,6 +14,8 @@ const navItems = [
   { path: '/planner', label: 'Planner' },
   { path: '/feed', label: 'Feed' },
   { path: '/saved', label: 'Saved' },
+  { path: '/gaps', label: 'Gaps' },
+  { path: '/sustainability', label: 'Eco' },
 ];
 
 export default function Navbar() {

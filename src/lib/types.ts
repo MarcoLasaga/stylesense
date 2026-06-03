@@ -60,6 +60,7 @@ export interface GeneratedOutfit {
   score: number;
   reason: string;
   createdAt: number;
+  breakdown?: RecommendationBreakdown;
 }
 
 export interface SavedOutfit {
@@ -91,6 +92,11 @@ export interface WeatherContext {
   precipitation: 'none' | 'rain' | 'snow';
   description: string;
   city?: string;
+  // Advanced weather intelligence (optional)
+  humidity?: number;
+  windKph?: number;
+  rainProbability?: number;
+  uvIndex?: number;
 }
 
 // ── Social feed (Lovable Cloud) ─────────────────────────
@@ -108,7 +114,6 @@ export interface SharedOutfit {
   rating_count: number;
   save_count: number;
   created_at: string;
-  // Augmented client-side:
   display_name?: string;
   avatar_initial?: string;
   liked_by_me?: boolean;
@@ -123,6 +128,17 @@ export interface RecommendationBreakdown {
   trendScore: number;
   frequencyPenalty: number;
   weatherFit: number;
+  fashionScore?: number;
   finalScore: number;
   factors: string[];
+  // Normalised % contributions for the Explainable Panel
+  contributions?: {
+    userPreference: number;
+    wardrobeCompatibility: number;
+    collaborative: number;
+    trend: number;
+    weather: number;
+    frequency: number;
+    fashionRules: number;
+  };
 }

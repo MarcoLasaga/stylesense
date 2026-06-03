@@ -27,6 +27,8 @@ import {
 } from './types';
 import { frequencyMultiplier, isInCooldown } from './frequency';
 import { TrendSnapshot, trendScore } from './trends';
+import { evaluateOutfit } from './fashionRules';
+import { getFeedbackAffinity, getBanList } from './feedback';
 
 // ── Color Harmony Rules ──────────────────────────────────
 const COLOR_GROUPS: Record<string, string[]> = {
@@ -220,9 +222,20 @@ export function generateOutfits(
   const occasion = options?.occasion;
   const weather = options?.weather;
   const trends = options?.trends;
-  const social = options?.socialAffinity;
 
-  // Optionally filter out recently-worn items entirely
+  // Merge cross-user social affinity with this user's explicit feedback
+  const fb = getFeedbackAffinity();
+  const social = options?.socialAffinity
+    ? {
+        styles: { ...options.socialAffinity.styles },
+        colors: { ...options.socialAffinity.colors },
+      }
+    : { styles: {} as Record<string, number>, colors: {} as Record<string, number> };
+  for (const [k, v] of Object.entries(fb.styles)) social.styles[k] = (social.styles[k] || 0) + v * 0.6;
+  for (const [k, v] of Object.entries(fb.colors)) social.colors[k] = (social.colors[k] || 0) + v * 0.6;
+
+  const banList = new Set(getBanList());
+
   const filteredWardrobe = options?.excludeRecentlyWorn
     ? wardrobe.filter(i => !isInCooldown(i.id))
     : wardrobe;
@@ -234,7 +247,7 @@ export function generateOutfits(
 
   if (tops.length === 0 || bottoms.length === 0) return [];
 
-  const candidates: (GeneratedOutfit & { breakdown: RecommendationBreakdown })[] = [];
+  const candidates: GeneratedOutfit[] = [];
 
   for (const top of tops) {
     for (const bottom of bottoms) {
@@ -251,6 +264,16 @@ export function generateOutfits(
             if (!hasMatch) continue;
           }
 
+          // Skip banned combos
+          const sig = finalItems.map(i => i.id).sort().join('|');
+          if (banList.has(sig)) continue;
+
+          const styleCounts = finalItems.reduce<Record<string, number>>((acc, i) => {
+            acc[i.style] = (acc[i.style] || 0) + 1; return acc;
+          }, {});
+          const dominantStyle = Object.entries(styleCounts).sort((a, b) => b[1] - a[1])[0][0] as StyleType;
+          const outfitOccasion = occasion || finalItems[0].occasion;
+
           // Score components
           const cb = contentBasedScore(finalItems, profile, occasion);
           const cf = collaborativeScore(
@@ -260,22 +283,22 @@ export function generateOutfits(
             profile,
             social,
           );
-          const styleCounts = finalItems.reduce<Record<string, number>>((acc, i) => {
-            acc[i.style] = (acc[i.style] || 0) + 1; return acc;
-          }, {});
-          const dominantStyle = Object.entries(styleCounts).sort((a, b) => b[1] - a[1])[0][0] as StyleType;
-          const outfitOccasion = occasion || finalItems[0].occasion;
-
           const tScore = trends ? trendScore(dominantStyle, finalItems.map(i => i.color), outfitOccasion, trends) : 0.3;
           const wFit = weatherFitScore(finalItems, weather);
 
+          // Fashion Knowledge Engine
+          const fashion = evaluateOutfit(finalItems, outfitOccasion, weather);
+
           // Hybrid weighted score
-          const base = cb.score * 0.40 + cf * 0.30 + tScore * 0.15 + wFit.score * 0.15;
+          // Weights: Content 35 · Collab 25 · Trend 10 · Weather 10 · Fashion Rules 20
+          const base =
+            cb.score * 0.35 +
+            cf * 0.25 +
+            tScore * 0.10 +
+            wFit.score * 0.10 +
+            fashion.score * 0.20;
 
-          // Modifiers
           const freqMult = frequencyMultiplier(finalItems);
-
-          // Size match: any item not in profile size penalizes hard
           const wrongSize = finalItems.filter(i => i.size && i.size !== profile.currentSize).length;
           const sizeMult = wrongSize === 0 ? 1 : Math.max(0.4, 1 - wrongSize * 0.15);
 
@@ -284,7 +307,24 @@ export function generateOutfits(
           const reasons = [...cb.reasons];
           if (tScore > 0.5) reasons.push('Trending now');
           if (wFit.note) reasons.push(wFit.note);
+          if (fashion.color.note) reasons.push(fashion.color.note);
+          if (fashion.category.notes.length) reasons.push(...fashion.category.notes);
           if (freqMult < 0.7) reasons.push('Includes recently-worn item');
+
+          // Normalised contributions (sum = 100) for Explainable Panel
+          const raw = {
+            userPreference: cb.score * 0.35,
+            wardrobeCompatibility: fashion.score * 0.20,
+            collaborative: cf * 0.25,
+            trend: tScore * 0.10,
+            weather: wFit.score * 0.10,
+            frequency: (freqMult - 1) * 10,   // negative when penalised
+            fashionRules: fashion.score * 0.05,
+          };
+          const sum = Object.values(raw).reduce((s, v) => s + Math.max(0, v), 0) || 1;
+          const contributions = Object.fromEntries(
+            Object.entries(raw).map(([k, v]) => [k, Math.round((Math.max(0, v) / sum) * 100)])
+          ) as RecommendationBreakdown['contributions'];
 
           candidates.push({
             id: `outfit_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
@@ -302,8 +342,10 @@ export function generateOutfits(
               trendScore: tScore,
               frequencyPenalty: 1 - freqMult,
               weatherFit: wFit.score,
+              fashionScore: fashion.score,
               finalScore,
               factors: reasons,
+              contributions,
             },
           });
         }
