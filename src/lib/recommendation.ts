@@ -27,6 +27,8 @@ import {
 } from './types';
 import { frequencyMultiplier, isInCooldown } from './frequency';
 import { TrendSnapshot, trendScore } from './trends';
+import { evaluateOutfit } from './fashionRules';
+import { getFeedbackAffinity, getBanList, outfitSignature } from './feedback';
 
 // ── Color Harmony Rules ──────────────────────────────────
 const COLOR_GROUPS: Record<string, string[]> = {
