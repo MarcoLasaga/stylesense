@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart3, Shirt, Users, Shield, Home, Eye, Activity, LayoutDashboard } from 'lucide-react';
+import { BarChart3, Shirt, Users, Shield, Home, Eye, Activity, LayoutDashboard, FlaskConical, Award } from 'lucide-react';
 
 const links = [
   { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -8,6 +8,8 @@ const links = [
   { path: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   { path: '/admin/algorithm', label: 'Recommendations', icon: Eye },
   { path: '/admin/performance', label: 'Performance', icon: Activity },
+  { path: '/admin/research', label: 'Research Analytics', icon: FlaskConical },
+  { path: '/admin/thesis', label: 'Thesis Contributions', icon: Award },
 ];
 
 export default function AdminSidebar() {
