@@ -42,6 +42,8 @@ const App = () => (
           <Route path="/saved" element={<SavedOutfitsPage />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/planner" element={<Planner />} />
+          <Route path="/sustainability" element={<Sustainability />} />
+          <Route path="/gaps" element={<WardrobeGaps />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           {/* Admin routes */}
@@ -51,6 +53,8 @@ const App = () => (
           <Route path="/admin/analytics" element={<AdminAnalytics />} />
           <Route path="/admin/algorithm" element={<AdminAlgorithm />} />
           <Route path="/admin/performance" element={<AdminPerformance />} />
+          <Route path="/admin/research" element={<AdminResearch />} />
+          <Route path="/admin/thesis" element={<AdminThesis />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
