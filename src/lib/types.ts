@@ -60,6 +60,7 @@ export interface GeneratedOutfit {
   score: number;
   reason: string;
   createdAt: number;
+  breakdown?: RecommendationBreakdown;
 }
 
 export interface SavedOutfit {
