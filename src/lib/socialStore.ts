@@ -44,7 +44,7 @@ export async function syncLocalProfileFromCloud(): Promise<void> {
   if (!uid) return;
   const { data: prof } = await supabase
     .from('profiles')
-    .select('display_name, avatar_initial, current_size, preferred_styles')
+    .select('display_name, avatar_initial, current_size, preferred_styles, avatar_url')
     .eq('id', uid)
     .maybeSingle();
   if (!prof) return;
@@ -54,6 +54,7 @@ export async function syncLocalProfileFromCloud(): Promise<void> {
     id: uid,
     name: prof.display_name || local.name,
     avatarInitial: prof.avatar_initial || local.avatarInitial,
+    avatarUrl: (prof as { avatar_url?: string }).avatar_url || local.avatarUrl,
     currentSize: (prof.current_size as ClothingSize) || local.currentSize || 'M',
     preferredStyles: (prof.preferred_styles as never) || local.preferredStyles,
   });
@@ -66,10 +67,11 @@ export async function pushLocalProfileToCloud(): Promise<void> {
   await supabase.from('profiles').update({
     display_name: p.name,
     avatar_initial: p.avatarInitial,
+    avatar_url: p.avatarUrl ?? null,
     current_size: p.currentSize,
     preferred_styles: p.preferredStyles,
     updated_at: new Date().toISOString(),
-  }).eq('id', uid);
+  } as never).eq('id', uid);
 }
 
 // ── Social Feed ──────────────────────────────────────────
