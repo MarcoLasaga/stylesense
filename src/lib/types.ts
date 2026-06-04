@@ -46,6 +46,7 @@ export interface UserProfile {
   favoriteColors: string[];
   occasionPreference: OccasionType[];
   avatarInitial: string;
+  avatarUrl?: string;
   role: UserRole;
   createdAt: number;
 }
