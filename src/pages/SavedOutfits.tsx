@@ -4,7 +4,7 @@ import { getSavedOutfits, removeSavedOutfit, markOutfitWorn } from '@/lib/store'
 import { SavedOutfit, FitFeedback, WardrobeItem } from '@/lib/types';
 import WardrobeCard from '@/components/WardrobeCard';
 import { Button } from '@/components/ui/button';
-import { Trash2, CheckCircle, Share2, Smile } from 'lucide-react';
+import { Trash2, CheckCircle, Share2, Smile, Bookmark, ArrowDownToLine, ArrowUpToLine } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -16,10 +16,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
-const FIT_LABELS: { value: FitFeedback; label: string; emoji: string }[] = [
-  { value: 'too_tight', label: 'Too tight', emoji: '🤏' },
-  { value: 'perfect', label: 'Perfect', emoji: '👌' },
-  { value: 'too_loose', label: 'Too loose', emoji: '🫳' },
+const FIT_LABELS: { value: FitFeedback; label: string; Icon: typeof Smile }[] = [
+  { value: 'too_tight', label: 'Too tight', Icon: ArrowUpToLine },
+  { value: 'perfect', label: 'Perfect', Icon: Smile },
+  { value: 'too_loose', label: 'Too loose', Icon: ArrowDownToLine },
 ];
 
 export default function SavedOutfitsPage() {
@@ -70,7 +70,9 @@ export default function SavedOutfitsPage() {
 
         {outfits.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-4xl mb-4">💾</p>
+            <div className="w-16 h-16 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4">
+              <Bookmark className="h-8 w-8" />
+            </div>
             <p className="text-muted-foreground mb-4">No saved outfits yet</p>
             <Link to="/outfits"><Button>Generate Outfits</Button></Link>
           </div>

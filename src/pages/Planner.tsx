@@ -7,7 +7,7 @@ import { computeTrendSnapshot, TrendSnapshot } from '@/lib/trends';
 import { getSocialAffinity, logWear } from '@/lib/socialStore';
 import { recordWear } from '@/lib/frequency';
 import { GeneratedOutfit, OccasionType, WeatherContext } from '@/lib/types';
-import { Cloud, CloudRain, Sun, Snowflake, MapPin, RefreshCw, Check, TrendingUp } from 'lucide-react';
+import { Cloud, CloudRain, Sun, Snowflake, MapPin, RefreshCw, Check, TrendingUp, CalendarDays } from 'lucide-react';
 import WardrobeCard from '@/components/WardrobeCard';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
@@ -130,8 +130,10 @@ export default function Planner() {
         {loading && <p className="text-sm text-muted-foreground">Building your plan…</p>}
 
         {!loading && plan.length === 0 && (
-          <div className="text-center py-16 border border-dashed border-border rounded-sm">
-            <p className="text-4xl mb-3">🗓️</p>
+          <div className="text-center py-16 border border-dashed border-border rounded-2xl">
+            <div className="w-14 h-14 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3">
+              <CalendarDays className="h-7 w-7" />
+            </div>
             <p className="font-medium mb-1">Add more clothes to plan a full week</p>
             <p className="text-sm text-muted-foreground">You need at least a few tops, bottoms, and shoes</p>
           </div>

@@ -6,7 +6,7 @@ import { WardrobeItem, ClothingCategory, StyleType, OccasionType } from '@/lib/t
 import { sampleWardrobe } from '@/data/sampleWardrobe';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Plus, Download } from 'lucide-react';
+import { Search, Plus, Download, Shirt } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
