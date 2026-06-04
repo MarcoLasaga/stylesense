@@ -106,9 +106,9 @@ export async function fetchFeed(limit = 30): Promise<SharedOutfit[]> {
   const userIds = [...new Set(data.map(d => d.user_id))];
   const { data: authors } = await supabase
     .from('profiles')
-    .select('id, display_name, avatar_initial')
+    .select('id, display_name, avatar_initial, avatar_url')
     .in('id', userIds);
-  const authorMap = new Map((authors || []).map(a => [a.id, a]));
+  const authorMap = new Map((authors || []).map(a => [a.id, a as { id: string; display_name?: string; avatar_initial?: string; avatar_url?: string }]));
 
   let likedIds = new Set<string>();
   let savedIds = new Set<string>();
@@ -130,6 +130,7 @@ export async function fetchFeed(limit = 30): Promise<SharedOutfit[]> {
     items: d.items as unknown as WardrobeItem[],
     display_name: authorMap.get(d.user_id)?.display_name || 'Someone',
     avatar_initial: authorMap.get(d.user_id)?.avatar_initial || '?',
+    avatar_url: authorMap.get(d.user_id)?.avatar_url || undefined,
     liked_by_me: likedIds.has(d.id),
     saved_by_me: savedIds.has(d.id),
     my_rating: myRatings.get(d.id),

@@ -117,6 +117,7 @@ export interface SharedOutfit {
   created_at: string;
   display_name?: string;
   avatar_initial?: string;
+  avatar_url?: string;
   liked_by_me?: boolean;
   saved_by_me?: boolean;
   my_rating?: number;
