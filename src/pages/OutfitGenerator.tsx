@@ -64,7 +64,7 @@ export default function OutfitGenerator() {
   const handleSurprise = () => {
     const r = randomOutfit(wardrobe, profile);
     setSurprise(r);
-    if (r) toast('🎲 Surprise outfit generated!');
+    if (r) toast('Surprise outfit generated!');
   };
 
   const WeatherIcon = ({ w }: { w: WeatherContext }) => {
@@ -79,7 +79,9 @@ export default function OutfitGenerator() {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="container mx-auto px-4 pt-24 pb-16 text-center max-w-lg">
-          <p className="text-4xl mb-4">👔</p>
+          <div className="w-16 h-16 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4">
+            <Sparkles className="h-8 w-8" />
+          </div>
           <h1 className="text-2xl font-display font-bold mb-2">Not Enough Clothes</h1>
           <p className="text-muted-foreground mb-6">Add at least a top and a bottom to generate outfits.</p>
           <Link to="/upload"><Button className="gap-2"><Sparkles className="h-4 w-4" /> Add Clothes</Button></Link>
@@ -171,7 +173,7 @@ export default function OutfitGenerator() {
             className="bg-accent/10 border border-accent/30 rounded-sm p-6 mb-8"
           >
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display font-semibold">🎲 Surprise Outfit</h3>
+              <h3 className="font-display font-semibold flex items-center gap-2"><Shuffle className="h-4 w-4" /> Surprise Outfit</h3>
               <Button variant="ghost" size="sm" className="gap-1 text-xs" onClick={() => handleSave(surprise)}>
                 <Save className="h-3.5 w-3.5" /> Save
               </Button>

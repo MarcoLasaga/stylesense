@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["'Playfair Display'", "serif"],
-        body: ["'Inter'", "sans-serif"],
+        display: ["'Bagel Fat One'", "cursive"],
+        body: ["'Baloo Tamma 2'", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

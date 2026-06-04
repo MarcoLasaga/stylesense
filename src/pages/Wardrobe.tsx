@@ -6,7 +6,7 @@ import { WardrobeItem, ClothingCategory, StyleType, OccasionType } from '@/lib/t
 import { sampleWardrobe } from '@/data/sampleWardrobe';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Plus, Download } from 'lucide-react';
+import { Search, Plus, Download, Shirt } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -113,8 +113,10 @@ export default function Wardrobe() {
           </div>
         ) : (
           <div className="text-center py-20">
-            <p className="text-4xl mb-4">👗</p>
-            <h3 className="text-lg font-display font-semibold mb-2">Your wardrobe is empty</h3>
+            <div className="w-16 h-16 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4">
+              <Shirt className="h-8 w-8" />
+            </div>
+            <h3 className="font-display text-2xl mb-2">Your wardrobe is empty</h3>
             <p className="text-sm text-muted-foreground mb-6">Start by uploading your clothes or loading sample items.</p>
             <div className="flex gap-3 justify-center">
               <Button variant="outline" onClick={loadSamples} className="gap-2">
