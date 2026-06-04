@@ -127,10 +127,11 @@ export default function SavedOutfitsPage() {
                             <button
                               key={f.value}
                               onClick={() => handleFit(item, f.value)}
-                              className="text-xs px-1.5 py-0.5 rounded-sm bg-secondary hover:bg-secondary/70"
+                              className="p-1.5 rounded-md bg-secondary hover:bg-secondary/70"
                               title={f.label}
+                              aria-label={f.label}
                             >
-                              {f.emoji}
+                              <f.Icon className="h-3.5 w-3.5" />
                             </button>
                           ))}
                         </div>
