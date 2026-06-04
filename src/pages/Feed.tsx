@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import { fetchFeed, toggleLike, toggleSave, rateOutfit, isCloudSignedIn } from '@/lib/socialStore';
 import { SharedOutfit } from '@/lib/types';
-import { Heart, Bookmark, Star } from 'lucide-react';
+import { Heart, Bookmark, Star, Shirt, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
@@ -56,23 +57,27 @@ export default function Feed() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 pt-24 pb-16 max-w-3xl">
-        <div className="flex items-end justify-between mb-6">
+      <div className="container mx-auto px-4 pt-24 pb-16 max-w-2xl">
+        <div className="flex items-end justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-display font-bold mb-1">Outfit Feed</h1>
-            <p className="text-muted-foreground text-sm">Community outfits — likes & ratings power your recommendations</p>
+            <h1 className="font-display text-4xl mb-1">Community Feed</h1>
+            <p className="text-muted-foreground text-sm">
+              Outfits from the StyleSense community — likes &amp; ratings shape your recommendations
+            </p>
           </div>
-          <Link to="/outfits"><Button variant="outline" size="sm">Generate &amp; Share</Button></Link>
+          <Link to="/outfits"><Button size="sm" className="rounded-full">Share Outfit</Button></Link>
         </div>
 
         {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
 
         {!loading && feed.length === 0 && (
-          <div className="text-center py-16 border border-dashed border-border rounded-sm">
-            <p className="text-4xl mb-3">👕</p>
-            <p className="font-medium mb-1">No outfits posted yet</p>
-            <p className="text-sm text-muted-foreground mb-4">Be the first to share a look from your wardrobe</p>
-            <Link to="/outfits"><Button size="sm">Generate an outfit</Button></Link>
+          <div className="text-center py-20 border border-dashed border-border rounded-2xl bg-card">
+            <div className="w-14 h-14 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4">
+              <Shirt className="h-7 w-7" />
+            </div>
+            <p className="font-display text-xl mb-1">No outfits posted yet</p>
+            <p className="text-sm text-muted-foreground mb-5">Be the first to share a look from your wardrobe</p>
+            <Link to="/outfits"><Button className="rounded-full">Generate an outfit</Button></Link>
           </div>
         )}
 
@@ -83,14 +88,17 @@ export default function Feed() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
-              className="bg-card border border-border rounded-sm overflow-hidden"
+              className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm"
             >
-              <div className="flex items-center gap-3 p-4 border-b border-border">
-                <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-display font-semibold">
-                  {o.avatar_initial}
-                </div>
+              <div className="flex items-center gap-3 p-5">
+                <Avatar className="h-11 w-11 ring-1 ring-border">
+                  {o.avatar_url && <AvatarImage src={o.avatar_url} alt={o.display_name} />}
+                  <AvatarFallback className="bg-primary text-primary-foreground font-display">
+                    {o.avatar_initial}
+                  </AvatarFallback>
+                </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{o.display_name}</p>
+                  <p className="font-semibold truncate">{o.display_name}</p>
                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
                     {o.style} · {o.occasion}
                   </p>
@@ -100,13 +108,14 @@ export default function Feed() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-muted/30">
+              <div className="grid grid-cols-2 gap-1 bg-muted/30">
                 {o.items.slice(0, 4).map((it, idx) => (
                   <div key={idx} className="aspect-square bg-background flex items-center justify-center overflow-hidden">
                     {it.image ? (
                       <img src={it.image} alt={it.name} className="w-full h-full object-cover" loading="lazy" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground capitalize p-2 text-center">
+                      <div className="w-full h-full flex flex-col items-center justify-center text-xs text-muted-foreground capitalize p-2 text-center gap-2">
+                        <Shirt className="h-6 w-6 opacity-50" />
                         {it.name}
                       </div>
                     )}
@@ -114,11 +123,16 @@ export default function Feed() {
                 ))}
               </div>
 
-              <div className="p-4">
-                <p className="font-display font-semibold text-sm mb-1">{o.name}</p>
-                {o.caption && <p className="text-sm text-muted-foreground mb-3">{o.caption}</p>}
+              <div className="p-5">
+                <p className="font-display text-lg mb-1">{o.name}</p>
+                {o.caption && <p className="text-sm text-muted-foreground mb-4">{o.caption}</p>}
 
-                <div className="flex items-center gap-1 mb-3">
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  <span className="text-[10px] px-2.5 py-1 bg-secondary rounded-full capitalize">{o.style}</span>
+                  <span className="text-[10px] px-2.5 py-1 bg-secondary rounded-full capitalize">{o.occasion}</span>
+                </div>
+
+                <div className="flex items-center gap-1 mb-4">
                   {[1, 2, 3, 4, 5].map(n => (
                     <button
                       key={n}
@@ -127,7 +141,7 @@ export default function Feed() {
                       aria-label={`Rate ${n} stars`}
                     >
                       <Star
-                        className={`h-4 w-4 transition-colors ${
+                        className={`h-5 w-5 transition-colors ${
                           (o.my_rating ?? 0) >= n ? 'fill-accent text-accent' : 'text-muted-foreground'
                         }`}
                       />
@@ -139,24 +153,30 @@ export default function Feed() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3 pt-2 border-t border-border">
+                <div className="flex items-center gap-5 pt-4 border-t border-border">
                   <button
                     onClick={() => handleLike(o)}
-                    className={`flex items-center gap-1.5 text-xs transition-colors ${
+                    className={`flex items-center gap-2 text-sm font-medium transition-colors ${
                       o.liked_by_me ? 'text-accent' : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    <Heart className={`h-4 w-4 ${o.liked_by_me ? 'fill-accent' : ''}`} />
-                    {o.like_count} {o.like_count === 1 ? 'like' : 'likes'}
+                    <Heart className={`h-5 w-5 ${o.liked_by_me ? 'fill-accent' : ''}`} />
+                    {o.like_count}
                   </button>
                   <button
                     onClick={() => handleSave(o)}
-                    className={`flex items-center gap-1.5 text-xs transition-colors ${
+                    className={`flex items-center gap-2 text-sm font-medium transition-colors ${
                       o.saved_by_me ? 'text-accent' : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    <Bookmark className={`h-4 w-4 ${o.saved_by_me ? 'fill-accent' : ''}`} />
-                    {o.save_count} {o.save_count === 1 ? 'save' : 'saves'}
+                    <Bookmark className={`h-5 w-5 ${o.saved_by_me ? 'fill-accent' : ''}`} />
+                    {o.save_count}
+                  </button>
+                  <button
+                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label="Comments coming soon"
+                  >
+                    <MessageCircle className="h-5 w-5" />
                   </button>
                 </div>
               </div>
