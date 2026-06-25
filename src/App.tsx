@@ -46,6 +46,7 @@ const App = () => (
           <Route path="/sustainability" element={<Sustainability />} />
           <Route path="/gaps" element={<WardrobeGaps />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/login" element={<Login />} />
           {/* Admin routes */}
           <Route path="/admin" element={<AdminOverview />} />
