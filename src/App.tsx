@@ -15,6 +15,7 @@ import Feed from "./pages/Feed";
 import Planner from "./pages/Planner";
 import Sustainability from "./pages/Sustainability";
 import WardrobeGaps from "./pages/WardrobeGaps";
+import Settings from "./pages/Settings";
 
 // Admin pages
 import AdminOverview from "./pages/admin/AdminOverview";
