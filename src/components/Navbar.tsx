@@ -25,7 +25,8 @@ const moreNav = [
   { path: '/feed', label: 'Community', icon: UsersIcon },
   { path: '/saved', label: 'Saved Outfits', icon: Bookmark },
   { path: '/gaps', label: 'Wardrobe Gaps', icon: Shirt },
-  { path: '/profile', label: 'Settings', icon: Settings },
+  { path: '/profile', label: 'Account', icon: User },
+  { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
 const mobileNav = [
