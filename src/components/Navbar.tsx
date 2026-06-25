@@ -39,7 +39,8 @@ const mobileNav = [
   { path: '/saved', label: 'Saved Outfits', icon: Bookmark },
   { path: '/sustainability', label: 'Analytics', icon: BarChart3 },
   { path: '/gaps', label: 'Wardrobe Gaps', icon: Shirt },
-  { path: '/profile', label: 'Settings', icon: Settings },
+  { path: '/profile', label: 'Account', icon: User },
+  { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function Navbar() {
