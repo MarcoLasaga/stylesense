@@ -16,6 +16,7 @@ import Planner from "./pages/Planner";
 import Sustainability from "./pages/Sustainability";
 import WardrobeGaps from "./pages/WardrobeGaps";
 import Settings from "./pages/Settings";
+import Help from "./pages/Help";
 
 // Admin pages
 import AdminOverview from "./pages/admin/AdminOverview";
@@ -47,6 +48,7 @@ const App = () => (
           <Route path="/gaps" element={<WardrobeGaps />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/help" element={<Help />} />
           <Route path="/login" element={<Login />} />
           {/* Admin routes */}
           <Route path="/admin" element={<AdminOverview />} />

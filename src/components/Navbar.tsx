@@ -20,7 +20,6 @@ const primaryNav = [
 
 const moreNav = [
   { path: '/sustainability', label: 'Analytics', icon: BarChart3 },
-  { path: '/planner', label: 'Calendar', icon: CalendarDays },
   { path: '/saved', label: 'Outfit History', icon: History },
   { path: '/feed', label: 'Community', icon: UsersIcon },
   { path: '/saved', label: 'Saved Outfits', icon: Bookmark },
@@ -154,7 +153,7 @@ export default function Navbar() {
                   </Link>
                 ))}
                 <Link
-                  to="/profile"
+                  to="/help"
                   onClick={() => setMoreOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-secondary border-t border-border"
                 >
