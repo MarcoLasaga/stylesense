@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import { getSavedOutfits, removeSavedOutfit, markOutfitWorn } from '@/lib/store';
+import { getSavedOutfits, removeSavedOutfit, markOutfitWorn, toggleFavoriteOutfit } from '@/lib/store';
 import { SavedOutfit, FitFeedback, WardrobeItem } from '@/lib/types';
 import WardrobeCard from '@/components/WardrobeCard';
 import { Button } from '@/components/ui/button';
-import { Trash2, CheckCircle, Share2, Smile, Bookmark, ArrowDownToLine, ArrowUpToLine } from 'lucide-react';
+import { Trash2, CheckCircle, Share2, Smile, Bookmark, ArrowDownToLine, ArrowUpToLine, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { recordWear } from '@/lib/frequency';
 import { recordFitFeedback } from '@/lib/sizeAdaptation';
 import { logWear, logFitFeedback, postOutfit } from '@/lib/socialStore';
+import OutfitRatingModal from '@/components/OutfitRatingModal';
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog, DialogContent, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
