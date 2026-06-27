@@ -239,6 +239,43 @@ export const getAllSavedOutfits = (): SavedOutfit[] => {
   return s ? JSON.parse(s) : [];
 };
 
+// ── Favorites & ratings ─────────────────────────────────
+export const toggleFavoriteOutfit = (id: string): boolean => {
+  let next = false;
+  const saved = getSavedOutfits().map(o => {
+    if (o.id === id) { o.favorite = !o.favorite; next = !!o.favorite; }
+    return o;
+  });
+  localStorage.setItem(KEYS.savedOutfits, JSON.stringify(saved));
+  return next;
+};
+
+export const rateSavedOutfit = (id: string, rating: OutfitRating): void => {
+  const saved = getSavedOutfits().map(o => {
+    if (o.id === id) o.ratings = [...(o.ratings ?? []), rating];
+    return o;
+  });
+  localStorage.setItem(KEYS.savedOutfits, JSON.stringify(saved));
+};
+
+export const toggleFavoriteItem = (id: string): boolean => {
+  const w = getWardrobe();
+  const item = w.find(i => i.id === id);
+  if (!item) return false;
+  item.favorite = !item.favorite;
+  updateWardrobeItem(item);
+  return !!item.favorite;
+};
+
+export const setLaundryStatus = (id: string, status: LaundryStatus): void => {
+  const w = getWardrobe();
+  const item = w.find(i => i.id === id);
+  if (!item) return;
+  item.laundryStatus = status;
+  updateWardrobeItem(item);
+};
+
+
 // ── History ──────────────────────────────────────────────
 export const getHistory = (): OutfitHistory[] => {
   const s = localStorage.getItem(KEYS.history);
