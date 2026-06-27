@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu, X, Shield, LogOut, Home, Shirt, Compass, CalendarDays, Bell, Search,
-  ChevronDown, BarChart3, History, Users as UsersIcon, Bookmark, Settings, HelpCircle, User
+  ChevronDown, BarChart3, History, Users as UsersIcon, Bookmark, Settings, HelpCircle, User, Heart, Luggage
 } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { isLoggedIn, isAdmin, logout, saveProfile, getProfile } from '@/lib/store';
@@ -19,10 +19,12 @@ const primaryNav = [
 ];
 
 const moreNav = [
-  { path: '/sustainability', label: 'Analytics', icon: BarChart3 },
-  { path: '/saved', label: 'Outfit History', icon: History },
-  { path: '/feed', label: 'Community', icon: UsersIcon },
   { path: '/saved', label: 'Saved Outfits', icon: Bookmark },
+  { path: '/favorites', label: 'Favorite Outfits', icon: Heart },
+  { path: '/history', label: 'Outfit History', icon: History },
+  { path: '/packing', label: 'Packing Assistant', icon: Luggage },
+  { path: '/sustainability', label: 'Analytics', icon: BarChart3 },
+  { path: '/feed', label: 'Community', icon: UsersIcon },
   { path: '/gaps', label: 'Wardrobe Gaps', icon: Shirt },
   { path: '/profile', label: 'Account', icon: User },
   { path: '/settings', label: 'Settings', icon: Settings },
@@ -36,6 +38,9 @@ const mobileNav = [
   { path: '/planner', label: 'Planner', icon: CalendarDays },
   { path: '/feed', label: 'Community', icon: UsersIcon },
   { path: '/saved', label: 'Saved Outfits', icon: Bookmark },
+  { path: '/favorites', label: 'Favorites', icon: Heart },
+  { path: '/history', label: 'Outfit History', icon: History },
+  { path: '/packing', label: 'Packing Assistant', icon: Luggage },
   { path: '/sustainability', label: 'Analytics', icon: BarChart3 },
   { path: '/gaps', label: 'Wardrobe Gaps', icon: Shirt },
   { path: '/profile', label: 'Account', icon: User },

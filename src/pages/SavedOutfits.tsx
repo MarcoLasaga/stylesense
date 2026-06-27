@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import { getSavedOutfits, removeSavedOutfit, markOutfitWorn } from '@/lib/store';
+import { getSavedOutfits, removeSavedOutfit, markOutfitWorn, toggleFavoriteOutfit } from '@/lib/store';
 import { SavedOutfit, FitFeedback, WardrobeItem } from '@/lib/types';
 import WardrobeCard from '@/components/WardrobeCard';
 import { Button } from '@/components/ui/button';
-import { Trash2, CheckCircle, Share2, Smile, Bookmark, ArrowDownToLine, ArrowUpToLine } from 'lucide-react';
+import { Trash2, CheckCircle, Share2, Smile, Bookmark, ArrowDownToLine, ArrowUpToLine, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { recordWear } from '@/lib/frequency';
 import { recordFitFeedback } from '@/lib/sizeAdaptation';
 import { logWear, logFitFeedback, postOutfit } from '@/lib/socialStore';
+import OutfitRatingModal from '@/components/OutfitRatingModal';
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog, DialogContent, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
@@ -26,6 +27,7 @@ export default function SavedOutfitsPage() {
   const [outfits, setOutfits] = useState<SavedOutfit[]>([]);
   const [shareTarget, setShareTarget] = useState<SavedOutfit | null>(null);
   const [caption, setCaption] = useState('');
+  const [ratingTarget, setRatingTarget] = useState<SavedOutfit | null>(null);
 
   useEffect(() => { setOutfits(getSavedOutfits()); }, []);
 
@@ -35,12 +37,19 @@ export default function SavedOutfitsPage() {
     toast.success('Outfit removed');
   };
 
+  const handleFavorite = (id: string) => {
+    const isFav = toggleFavoriteOutfit(id);
+    setOutfits(getSavedOutfits());
+    toast.success(isFav ? 'Added to favorites' : 'Removed from favorites');
+  };
+
   const handleWorn = async (saved: SavedOutfit) => {
     markOutfitWorn(saved.id);
-    recordWear(saved.outfit.items);   // local frequency tracker
-    await logWear(saved.outfit.items); // cloud mirror
+    recordWear(saved.outfit.items);
+    await logWear(saved.outfit.items);
+    const fresh = getSavedOutfits().find(o => o.id === saved.id) ?? saved;
     setOutfits(getSavedOutfits());
-    toast.success('Marked as worn — recommender will avoid these for a few days');
+    setRatingTarget(fresh);
   };
 
   const handleFit = async (item: WardrobeItem, fit: FitFeedback) => {
@@ -89,6 +98,9 @@ export default function SavedOutfitsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-display font-semibold text-sm">{saved.outfit.name}</h3>
                   <div className="flex gap-1">
+                    <Button variant="ghost" size="icon" className={`h-7 w-7 ${saved.favorite ? 'text-accent' : ''}`} onClick={() => handleFavorite(saved.id)} title={saved.favorite ? 'Unfavorite' : 'Favorite'}>
+                      <Heart className={`h-3.5 w-3.5 ${saved.favorite ? 'fill-current' : ''}`} />
+                    </Button>
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleWorn(saved)} title="Mark as worn">
                       <CheckCircle className="h-3.5 w-3.5" />
                     </Button>
@@ -170,6 +182,13 @@ export default function SavedOutfitsPage() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Rating modal — appears after marking worn */}
+        <OutfitRatingModal
+          outfit={ratingTarget}
+          open={!!ratingTarget}
+          onClose={() => { setRatingTarget(null); setOutfits(getSavedOutfits()); }}
+        />
       </div>
     </div>
   );

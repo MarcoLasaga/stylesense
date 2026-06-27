@@ -13,6 +13,12 @@ export const ALL_SIZES: ClothingSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 export type FitFeedback = 'too_tight' | 'perfect' | 'too_loose';
 
+export type LaundryStatus = 'clean' | 'needs_washing' | 'in_laundry';
+export const ALL_LAUNDRY: LaundryStatus[] = ['clean', 'needs_washing', 'in_laundry'];
+
+export type SeasonTag = 'spring' | 'summer' | 'rainy' | 'winter' | 'all_season';
+export const ALL_SEASONS: SeasonTag[] = ['spring', 'summer', 'rainy', 'winter', 'all_season'];
+
 export interface WardrobeItem {
   id: string;
   userId: string;
@@ -28,6 +34,12 @@ export interface WardrobeItem {
   addedAt: number;
   wornCount: number;
   lastWorn?: number;
+  // Extended metadata (optional, design-first)
+  brand?: string;
+  cost?: number;
+  favorite?: boolean;
+  laundryStatus?: LaundryStatus;
+  seasons?: SeasonTag[];
 }
 
 export type BodyType = 'slim' | 'athletic' | 'average' | 'curvy' | 'plus-size';
@@ -64,11 +76,21 @@ export interface GeneratedOutfit {
   breakdown?: RecommendationBreakdown;
 }
 
+export interface OutfitRating {
+  stars: number;        // 1-5
+  reaction?: 'love' | 'good' | 'meh' | 'bad';
+  note?: string;
+  weatherSnapshot?: string;
+  ratedAt: number;
+}
+
 export interface SavedOutfit {
   id: string;
   outfit: GeneratedOutfit;
   savedAt: number;
   wornDates: number[];
+  favorite?: boolean;
+  ratings?: OutfitRating[];
 }
 
 export interface OutfitHistory {

@@ -17,6 +17,10 @@ import Sustainability from "./pages/Sustainability";
 import WardrobeGaps from "./pages/WardrobeGaps";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
+import ClothingDetail from "./pages/ClothingDetail";
+import FavoriteOutfits from "./pages/FavoriteOutfits";
+import OutfitHistory from "./pages/OutfitHistory";
+import PackingAssistant from "./pages/PackingAssistant";
 
 // Admin pages
 import AdminOverview from "./pages/admin/AdminOverview";
@@ -39,6 +43,10 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/wardrobe" element={<Wardrobe />} />
+          <Route path="/wardrobe/:id" element={<ClothingDetail />} />
+          <Route path="/favorites" element={<FavoriteOutfits />} />
+          <Route path="/history" element={<OutfitHistory />} />
+          <Route path="/packing" element={<PackingAssistant />} />
           <Route path="/upload" element={<UploadClothes />} />
           <Route path="/outfits" element={<OutfitGenerator />} />
           <Route path="/saved" element={<SavedOutfitsPage />} />
