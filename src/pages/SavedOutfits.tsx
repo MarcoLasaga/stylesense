@@ -98,6 +98,9 @@ export default function SavedOutfitsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-display font-semibold text-sm">{saved.outfit.name}</h3>
                   <div className="flex gap-1">
+                    <Button variant="ghost" size="icon" className={`h-7 w-7 ${saved.favorite ? 'text-accent' : ''}`} onClick={() => handleFavorite(saved.id)} title={saved.favorite ? 'Unfavorite' : 'Favorite'}>
+                      <Heart className={`h-3.5 w-3.5 ${saved.favorite ? 'fill-current' : ''}`} />
+                    </Button>
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleWorn(saved)} title="Mark as worn">
                       <CheckCircle className="h-3.5 w-3.5" />
                     </Button>
