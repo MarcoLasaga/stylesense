@@ -76,11 +76,21 @@ export interface GeneratedOutfit {
   breakdown?: RecommendationBreakdown;
 }
 
+export interface OutfitRating {
+  stars: number;        // 1-5
+  reaction?: 'love' | 'good' | 'meh' | 'bad';
+  note?: string;
+  weatherSnapshot?: string;
+  ratedAt: number;
+}
+
 export interface SavedOutfit {
   id: string;
   outfit: GeneratedOutfit;
   savedAt: number;
   wornDates: number[];
+  favorite?: boolean;
+  ratings?: OutfitRating[];
 }
 
 export interface OutfitHistory {
