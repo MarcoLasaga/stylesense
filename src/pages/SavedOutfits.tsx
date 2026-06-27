@@ -182,6 +182,13 @@ export default function SavedOutfitsPage() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Rating modal — appears after marking worn */}
+        <OutfitRatingModal
+          outfit={ratingTarget}
+          open={!!ratingTarget}
+          onClose={() => { setRatingTarget(null); setOutfits(getSavedOutfits()); }}
+        />
       </div>
     </div>
   );
