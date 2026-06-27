@@ -2,7 +2,7 @@
  * StyleSense Store — localStorage-based persistence layer
  * Manages user wardrobe, outfits, preferences, and multi-user accounts
  */
-import { WardrobeItem, UserProfile, SavedOutfit, OutfitHistory, GeneratedOutfit, UserRole } from './types';
+import { WardrobeItem, UserProfile, SavedOutfit, OutfitHistory, GeneratedOutfit, UserRole, LaundryStatus, OutfitRating } from './types';
 
 const KEYS = {
   profile: 'ss_profile',
