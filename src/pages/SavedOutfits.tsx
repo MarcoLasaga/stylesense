@@ -27,6 +27,7 @@ export default function SavedOutfitsPage() {
   const [outfits, setOutfits] = useState<SavedOutfit[]>([]);
   const [shareTarget, setShareTarget] = useState<SavedOutfit | null>(null);
   const [caption, setCaption] = useState('');
+  const [ratingTarget, setRatingTarget] = useState<SavedOutfit | null>(null);
 
   useEffect(() => { setOutfits(getSavedOutfits()); }, []);
 
@@ -36,12 +37,19 @@ export default function SavedOutfitsPage() {
     toast.success('Outfit removed');
   };
 
+  const handleFavorite = (id: string) => {
+    const isFav = toggleFavoriteOutfit(id);
+    setOutfits(getSavedOutfits());
+    toast.success(isFav ? 'Added to favorites' : 'Removed from favorites');
+  };
+
   const handleWorn = async (saved: SavedOutfit) => {
     markOutfitWorn(saved.id);
-    recordWear(saved.outfit.items);   // local frequency tracker
-    await logWear(saved.outfit.items); // cloud mirror
+    recordWear(saved.outfit.items);
+    await logWear(saved.outfit.items);
+    const fresh = getSavedOutfits().find(o => o.id === saved.id) ?? saved;
     setOutfits(getSavedOutfits());
-    toast.success('Marked as worn — recommender will avoid these for a few days');
+    setRatingTarget(fresh);
   };
 
   const handleFit = async (item: WardrobeItem, fit: FitFeedback) => {
