@@ -128,6 +128,21 @@ export default function Login() {
             </p>
           </div>
 
+          {existingSession && (
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-sm mb-6">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Already signed in</p>
+              <p className="font-medium mb-4 truncate">{existingSession.email}</p>
+              <div className="flex gap-2">
+                <Button onClick={handleContinue} className="flex-1 rounded-full gap-2">
+                  Continue <ArrowRight className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" onClick={handleSwitchAccount} disabled={busy} className="rounded-full gap-2">
+                  <LogOut className="h-4 w-4" /> Switch
+                </Button>
+              </div>
+            </div>
+          )}
+
           <div className="bg-card border border-border rounded-2xl p-7 shadow-sm">
             {/* Google */}
             <Button
