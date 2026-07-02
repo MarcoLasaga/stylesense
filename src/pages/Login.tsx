@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import Navbar from '@/components/Navbar';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, LogOut, ArrowRight } from 'lucide-react';
+import { logout as localLogout } from '@/lib/store';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,16 +18,32 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
+  const [existingSession, setExistingSession] = useState<null | { email: string; admin: boolean }>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       if (data.session) {
-        syncLocalProfileFromCloud().then(() => {
-          isCloudAdmin().then(adm => navigate(adm ? '/admin' : '/wardrobe'));
-        });
+        await syncLocalProfileFromCloud();
+        const adm = await isCloudAdmin();
+        setExistingSession({ email: data.session.user.email ?? 'your account', admin: adm });
       }
     });
-  }, [navigate]);
+  }, []);
+
+  const handleContinue = () => {
+    navigate(existingSession?.admin ? '/admin' : '/wardrobe');
+  };
+
+  const handleSwitchAccount = async () => {
+    setBusy(true);
+    try {
+      await supabase.auth.signOut().catch(() => {});
+      localLogout();
+      setExistingSession(null);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const handleGoogle = async () => {
     if (busy) return;
@@ -110,6 +127,21 @@ export default function Login() {
               {isSignup ? 'Start organizing your wardrobe' : 'Sign in to your digital closet'}
             </p>
           </div>
+
+          {existingSession && (
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-sm mb-6">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Already signed in</p>
+              <p className="font-medium mb-4 truncate">{existingSession.email}</p>
+              <div className="flex gap-2">
+                <Button onClick={handleContinue} className="flex-1 rounded-full gap-2">
+                  Continue <ArrowRight className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" onClick={handleSwitchAccount} disabled={busy} className="rounded-full gap-2">
+                  <LogOut className="h-4 w-4" /> Switch
+                </Button>
+              </div>
+            </div>
+          )}
 
           <div className="bg-card border border-border rounded-2xl p-7 shadow-sm">
             {/* Google */}
