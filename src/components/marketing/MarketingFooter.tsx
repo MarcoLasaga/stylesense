@@ -1,72 +1,41 @@
 import { Link } from 'react-router-dom';
 
-const columns = [
-  {
-    title: 'Explore',
-    links: [
-      { label: 'Home', href: '#home' },
-      { label: 'Features', href: '#features' },
-      { label: 'How It Works', href: '#how-it-works' },
-    ],
-  },
-  {
-    title: 'Learn',
-    links: [
-      { label: 'About', href: '#about' },
-      { label: 'Testimonials', href: '#testimonials' },
-      { label: 'FAQ', href: '#faq' },
-    ],
-  },
+const links = [
+  ['Home', '/'], ['Features', '/features'], ['How It Works', '/how-it-works'],
+  ['About', '/about'], ['Testimonials', '/testimonials'], ['FAQ', '/faq'],
 ];
 
 export default function MarketingFooter() {
   return (
-    <footer className="bg-secondary/60 border-t border-border">
-      <div className="container mx-auto px-4 md:px-6 py-14">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2 max-w-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-9 h-9 rounded-2xl bg-accent text-accent-foreground flex items-center justify-center font-display text-lg">S</span>
+    <footer className="border-t border-border bg-secondary/50">
+      <div className="container mx-auto px-4 py-14 md:px-6">
+        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
+          <div className="max-w-md">
+            <Link to="/" className="mb-4 flex items-center gap-2">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent font-display text-lg text-accent-foreground">S</span>
               <span className="font-display text-xl">Style<span className="text-primary">Sense</span></span>
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              An image-based wardrobe and outfit recommendation system designed to help you
-              make more out of the clothes you already own.
-            </p>
+            </Link>
+            <p className="text-sm leading-relaxed text-muted-foreground">An image-based wardrobe and outfit recommendation system designed to help you make more of the clothes you already own.</p>
           </div>
-
-          {columns.map(col => (
-            <div key={col.title}>
-              <p className="font-semibold mb-3 text-sm">{col.title}</p>
-              <ul className="space-y-2">
-                {col.links.map(l => (
-                  <li key={l.label}>
-                    <a href={l.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                      {l.label}
-                    </a>
-                  </li>
-                ))}
-                {col.title === 'Learn' && (
-                  <>
-                    <li><Link to="/help" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</Link></li>
-                    <li><a href="#faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy</a></li>
-                    <li><a href="#faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms</a></li>
-                  </>
-                )}
-              </ul>
-            </div>
-          ))}
+          <div>
+            <p className="mb-4 text-sm font-bold">Explore</p>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 md:grid-cols-1">
+              {links.map(([label, to]) => <li key={to}><Link to={to} className="text-sm text-muted-foreground hover:text-primary">{label}</Link></li>)}
+            </ul>
+          </div>
+          <div>
+            <p className="mb-4 text-sm font-bold">More</p>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li><Link to="/help" className="hover:text-primary">Contact</Link></li>
+              <li><Link to="/login" className="hover:text-primary">Sign In</Link></li>
+              <li><span>Privacy</span></li>
+              <li><span>Terms</span></li>
+            </ul>
+          </div>
         </div>
-
-        <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground">
-            © 2026 StyleSense. An academic research project on personalized outfit recommendation.
-          </p>
-          <div className="flex gap-3 text-xs text-muted-foreground">
-            <span className="hover:text-primary cursor-pointer">Instagram</span>
-            <span className="hover:text-primary cursor-pointer">Facebook</span>
-            <span className="hover:text-primary cursor-pointer">TikTok</span>
-          </div>
+        <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2026 StyleSense. A personalized outfit recommendation research project.</p>
+          <p>Built around what you already own.</p>
         </div>
       </div>
     </footer>
