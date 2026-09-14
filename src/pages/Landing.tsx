@@ -3,521 +3,211 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import MarketingFooter from '@/components/marketing/MarketingFooter';
-import OnboardingQuiz from '@/components/marketing/OnboardingQuiz';
-
-const problems = [
-  'A full closet, and still nothing feels wearable.',
-  'The same three outfits, week after week.',
-  'Clothes at the back of the shelf you forgot you owned.',
-  'Pieces you like, but can never match with anything.',
-  'Buying something new when what you own would have worked.',
-  'Guessing what fits the weather or the occasion.',
-];
-
-const features = [
-  { title: 'Digital Wardrobe', desc: 'Upload or capture photos of your clothes and keep your whole wardrobe organized in one place.' },
-  { title: 'Smart Clothing Recognition', desc: 'StyleSense picks up the details that matter — clothing type, color, and style — so tagging is quick.' },
-  { title: 'Mix & Match', desc: 'Generate outfit combinations built only from the clothes already sitting in your closet.' },
-  { title: 'Personalized Recommendations', desc: 'Suggestions adapt to your preferences, ratings, feedback, and the outfits you actually wear.' },
-  { title: 'Weather-Aware Outfits', desc: 'Recommendations can take today\'s weather into account before suggesting anything.' },
-  { title: 'Occasion-Based Styling', desc: 'School, casual days, work, formal events, or occasions you define yourself.' },
-  { title: 'Outfit Planner', desc: 'Line up outfit choices for the days ahead so mornings stop being a decision.' },
-  { title: 'No New Clothes Mode', desc: 'Prioritizes what you already own instead of nudging you toward another purchase.' },
-  { title: 'Wear Frequency Tracking', desc: 'Sees how often items and outfits get worn, and eases off repeats so suggestions stay fresh.' },
-  { title: 'Community & Outfit Discovery', desc: 'Browse and react to outfits shared by other users — optional, and it helps recommendations too.' },
-];
-
-const hybrid = [
-  { title: 'Content-Based Filtering', desc: 'Looks at the characteristics of your clothing — type, color, style, fabric — and works out which pieces genuinely go together.' },
-  { title: 'Collaborative Filtering', desc: 'Learns from ratings, feedback, outfit interactions, and what people with similar taste tend to like.' },
-  { title: 'Fashion Trend Awareness', desc: 'Folds in relevant current trends while still putting your existing wardrobe and personal taste first.' },
-];
-
-const context = [
-  'Weather', 'Location', 'Occasion', 'Your preferences',
-  'What\'s available', 'Outfit history', 'Wear frequency', 'Community activity',
-];
+import heroImage from '@/assets/stylesense-hero.jpg';
+import wardrobeImage from '@/assets/wardrobe-editorial.jpg';
+import communityImage from '@/assets/community-editorial.jpg';
+import { faqGroups, testimonials } from '@/data/marketingContent';
 
 const steps = [
-  { n: '01', title: 'BUILD YOUR WARDROBE', desc: 'Upload photos of your clothes or add them manually.' },
-  { n: '02', title: 'SET YOUR PREFERENCES', desc: 'Tell StyleSense about your style, your usual occasions, and what matters to you.' },
-  { n: '03', title: 'DISCOVER OUTFITS', desc: 'Get combinations generated from the clothes you already own.' },
-  { n: '04', title: 'MAKE IT YOURS', desc: 'Rate, save, wear, skip, or leave feedback on what you\'re shown.' },
-  { n: '05', title: 'STYLESENSE LEARNS', desc: 'Every interaction shapes the recommendations you get next.' },
+  ['01', 'Add your clothes', 'Upload or capture the clothing you already own.'],
+  ['02', 'Build your wardrobe', 'StyleSense identifies useful details and keeps everything organized.'],
+  ['03', 'Get personal recommendations', 'Your taste, wardrobe, weather, occasion, and feedback shape every suggestion.'],
+  ['04', 'Plan what to wear', 'Save outfits, plan the week, and keep discovering combinations.'],
 ];
 
-const testimonials = [
-  { quote: 'I have so many clothes, but I always end up wearing the same three outfits. StyleSense gives me ideas I wouldn\'t have thought of.', name: 'Placeholder Name', role: 'Student' },
-  { quote: 'Mornings used to eat twenty minutes. Now I check the planner the night before and it\'s already sorted.', name: 'Placeholder Name', role: 'Young Professional' },
-  { quote: 'It reminded me about pieces I completely forgot I bought. I stopped shopping for a while, honestly.', name: 'Placeholder Name', role: 'Student' },
-];
+const intelligence = ['Clothing attributes', 'Personal style', 'Previous interactions', 'Outfit ratings', 'Wear frequency', 'Occasion', 'Weather', 'Location', 'Fashion trends', 'Fit and size'];
 
-const faqs = [
-  { q: 'What is StyleSense?', a: 'StyleSense is an image-based wardrobe and outfit recommendation system. You add the clothes you own, and it generates outfit suggestions from them.' },
-  { q: 'Is StyleSense a shopping app?', a: 'No. StyleSense focuses primarily on helping you make better use of clothing you already own.' },
-  { q: 'Does StyleSense recognize my clothes?', a: 'Yes — when you add a photo, it identifies clothing attributes such as type, color, and style so your wardrobe is organized with less effort.' },
-  { q: 'Can I manually add clothes?', a: 'Absolutely. You can enter items yourself and edit any detail the app picked up.' },
-  { q: 'Can StyleSense recommend outfits based on weather?', a: 'Yes. Recommendations can consider current weather conditions before suggesting an outfit.' },
-  { q: 'Can I plan outfits for future days?', a: 'Yes, the outfit planner lets you organize choices for upcoming days.' },
-  { q: 'Does StyleSense learn from my preferences?', a: 'It does. Ratings, feedback, saves, skips, and what you actually wear all feed into future recommendations.' },
-  { q: 'Can I see outfits from other users?', a: 'Yes, optionally. Community outfit discovery lets you browse and react to outfits shared by others.' },
-  { q: 'What happens if my clothing size changes?', a: 'You can update sizes and fit feedback, and StyleSense adjusts so outdated clothing information stops affecting your recommendations.' },
-  { q: 'Can I use StyleSense without buying new clothes?', a: 'That is the whole point. No New Clothes mode prioritizes what is already in your wardrobe.' },
-];
-
-function PhoneMockup() {
+function PhonePreview() {
   return (
-    <div className="relative mx-auto w-[240px] sm:w-[270px] rounded-[2.5rem] border-8 border-foreground/85 bg-card shadow-xl overflow-hidden">
-      <div className="h-6 bg-foreground/85" />
-      <div className="p-4 space-y-3 bg-background">
-        <p className="font-display text-lg leading-tight">Today's Outfit</p>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="aspect-[3/4] rounded-2xl bg-accent/45" />
-          <div className="aspect-[3/4] rounded-2xl bg-primary/25" />
+    <div className="mx-auto w-[250px] overflow-hidden rounded-[2.75rem] border-[9px] border-foreground bg-background shadow-2xl sm:w-[290px]">
+      <div className="h-7 bg-foreground" />
+      <div className="p-4">
+        <p className="text-xs font-bold text-primary">Good morning, Mika</p>
+        <h3 className="mt-1 font-display text-xl">Your outfit for today</h3>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="aspect-[3/4] rounded-2xl bg-accent/60" />
+          <div className="aspect-[3/4] rounded-2xl bg-primary/30" />
+          <div className="aspect-[3/4] rounded-2xl bg-fashion-rose/45" />
           <div className="aspect-[3/4] rounded-2xl bg-secondary" />
-          <div className="aspect-[3/4] rounded-2xl bg-fashion-rose/40" />
         </div>
-        <div className="rounded-2xl bg-secondary px-3 py-2">
-          <p className="text-[11px] text-muted-foreground">Sunny · 29°C · Casual day</p>
-          <p className="text-xs font-semibold">92% match with your style</p>
+        <div className="mt-3 rounded-2xl bg-secondary px-3 py-2">
+          <p className="text-[11px] text-muted-foreground">Warm · Casual · No recent repeats</p>
+          <p className="text-xs font-bold">A strong match for your day</p>
         </div>
-        <div className="rounded-full bg-primary text-primary-foreground text-center text-xs py-2 font-semibold">
-          Wear this today
-        </div>
+        <div className="mt-3 rounded-full bg-accent py-2 text-center text-xs font-bold text-accent-foreground">Save this outfit</div>
       </div>
     </div>
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-xs uppercase tracking-[0.25em] text-primary font-semibold mb-3">{children}</p>
-  );
-}
-
 export default function Landing() {
+  const homepageFaqs = faqGroups.flatMap(group => group.items).slice(0, 6);
+
   return (
     <div className="min-h-screen bg-background">
       <MarketingNav />
-
-      {/* HERO */}
-      <section id="home" className="pt-16">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24 grid lg:grid-cols-2 gap-14 items-center">
-          <div>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl leading-[1.05] mb-6">
-              YOUR WARDROBE.<br />
-              YOUR STYLE.<br />
-              <span className="text-primary">SMARTER CHOICES.</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-xl leading-relaxed mb-8">
-              StyleSense helps you turn the clothes you already own into outfits you'll actually
-              want to wear.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a href="#get-the-app">
-                <Button size="lg" className="rounded-full h-13 px-8 text-base w-full sm:w-auto">Get the App</Button>
-              </a>
-              <a href="#features">
-                <Button size="lg" variant="outline" className="rounded-full h-13 px-8 text-base w-full sm:w-auto">
-                  Explore Features
-                </Button>
-              </a>
+      <main>
+        <section className="relative min-h-[92svh] overflow-hidden">
+          <img src={heroImage} alt="A woman choosing between outfits beside her personal wardrobe" className="absolute inset-0 h-full w-full object-cover object-[62%_center]" width={1920} height={1280} fetchPriority="high" />
+          <div className="absolute inset-0 bg-foreground/10" />
+          <div className="relative container mx-auto flex min-h-[92svh] items-end px-4 pb-14 pt-28 md:items-center md:px-6 md:pb-10">
+            <div className="max-w-2xl rounded-[2rem] bg-background/92 p-7 shadow-sm backdrop-blur-sm sm:p-10 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
+              <p className="mb-4 text-sm font-bold text-primary md:text-foreground">Your wardrobe, reimagined.</p>
+              <h1 className="font-display text-4xl leading-[1.02] sm:text-5xl md:text-7xl">Style starts with what you already own.</h1>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg md:text-foreground/80">StyleSense turns the clothes in your wardrobe into personalized outfit recommendations made for your style, schedule, and everyday life.</p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a href="#get-the-app"><Button size="lg" className="h-12 w-full rounded-full px-8 sm:w-auto">Get the App</Button></a>
+                <Link to="/how-it-works"><Button size="lg" variant="outline" className="h-12 w-full rounded-full bg-background/90 px-8 sm:w-auto">Explore How It Works</Button></Link>
+              </div>
             </div>
-            <div className="mt-8 flex flex-wrap gap-2">
-              {['Personal wardrobe', 'Outfit ideas', 'Weather-aware', 'No new clothes needed'].map(t => (
-                <span key={t} className="text-xs font-medium bg-secondary text-secondary-foreground rounded-full px-3 py-1.5">
-                  {t}
-                </span>
+          </div>
+          <a href="#introduction" className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 text-xs font-bold uppercase tracking-[0.2em] text-foreground md:block">Scroll to discover ↓</a>
+        </section>
+
+        <section id="introduction" className="container mx-auto grid gap-12 px-4 py-20 md:px-6 md:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">A better first choice</p>
+            <h2 className="font-display text-4xl leading-tight sm:text-5xl">MORE OUTFITS. LESS SHOPPING.</h2>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">The answer to “what should I wear?” may already be hanging in your closet. StyleSense helps uncover overlooked combinations, reduce repetition, and make everyday dressing feel easier.</p>
+            <Link to="/about" className="mt-7 inline-block font-bold text-primary underline decoration-accent decoration-4 underline-offset-8">Why we built StyleSense</Link>
+          </div>
+          <img src={wardrobeImage} alt="Several outfits arranged from an existing personal wardrobe" className="aspect-[3/2] w-full rounded-3xl object-cover" width={1536} height={1024} loading="lazy" />
+        </section>
+
+        <section className="border-y border-border bg-secondary/45 py-20 md:py-28">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="mb-12 max-w-2xl">
+              <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">How StyleSense works</p>
+              <h2 className="font-display text-4xl sm:text-5xl">FROM CLOSET TO OUTFIT, WITHOUT THE GUESSWORK.</h2>
+            </div>
+            <div className="border-y border-border">
+              {steps.map(([number, title, copy]) => (
+                <div key={number} className="grid gap-2 border-b border-border py-7 last:border-b-0 sm:grid-cols-[90px_1fr_1fr] sm:items-baseline sm:gap-8">
+                  <span className="font-display text-3xl text-accent">{number}</span>
+                  <h3 className="font-display text-xl sm:text-2xl">{title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{copy}</p>
+                </div>
               ))}
             </div>
+            <Link to="/how-it-works"><Button variant="outline" className="mt-8 rounded-full">See the complete journey</Button></Link>
           </div>
+        </section>
 
-          <div className="relative">
-            <div className="absolute inset-6 rounded-[3rem] bg-accent/35" aria-hidden />
-            <div className="relative py-10">
-              <PhoneMockup />
+        <section className="container mx-auto px-4 py-20 md:px-6 md:py-28">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-stretch">
+            <div className="lg:col-span-7 overflow-hidden rounded-3xl bg-primary text-primary-foreground">
+              <div className="p-8 sm:p-12">
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">Image-based wardrobe</p>
+                <h2 className="mt-3 max-w-xl font-display text-4xl sm:text-5xl">YOUR CLOSET, ORGANIZED AROUND YOU.</h2>
+                <p className="mt-5 max-w-xl text-primary-foreground/80">Photograph your clothes, correct details when needed, then search and filter everything without digging through a drawer.</p>
+              </div>
+              <img src={wardrobeImage} alt="Organized wardrobe outfits" className="h-72 w-full object-cover" width={1536} height={1024} loading="lazy" />
+            </div>
+            <div className="flex flex-col justify-between rounded-3xl border border-border bg-card p-8 lg:col-span-5 sm:p-10">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Recommendations</p>
+                <h3 className="mt-3 font-display text-3xl">Not random. Personal.</h3>
+                <p className="mt-4 leading-relaxed text-muted-foreground">StyleSense balances compatible clothing, your preferences, weather, occasion, feedback, and fashion context.</p>
+              </div>
+              <div className="mt-10 flex flex-wrap gap-2">
+                {['Content-based', 'Collaborative', 'Weather-aware', 'Feedback-led'].map(item => <span key={item} className="rounded-full bg-secondary px-3 py-1.5 text-xs font-bold">{item}</span>)}
+              </div>
+            </div>
+            <div className="rounded-3xl border border-border bg-card p-8 lg:col-span-5 sm:p-10">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Wear frequency</p>
+              <h3 className="mt-3 font-display text-3xl">Keep the rotation fresh.</h3>
+              <p className="mt-4 leading-relaxed text-muted-foreground">Frequently worn pieces can step back for a while, giving overlooked clothes a chance to return.</p>
+              <div className="mt-8 space-y-3">
+                {[['Yellow knit', '2 wears this week', 'w-3/4'], ['Denim jacket', '1 wear this week', 'w-1/2'], ['Printed skirt', 'Ready to rediscover', 'w-1/4']].map(([name, note, width]) => <div key={name}><div className="flex justify-between text-xs"><span className="font-bold">{name}</span><span className="text-muted-foreground">{note}</span></div><div className="mt-1 h-2 rounded-full bg-secondary"><div className={`h-full rounded-full bg-accent ${width}`} /></div></div>)}
+              </div>
+            </div>
+            <div className="rounded-3xl bg-accent/45 p-8 lg:col-span-7 sm:p-10">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Plan ahead</p>
+              <h3 className="mt-3 font-display text-3xl">A week that still feels like you.</h3>
+              <p className="mt-4 max-w-xl text-muted-foreground">Build daily plans around your calendar, current weather, available clothes, and recent outfit history.</p>
+              <div className="mt-8 grid grid-cols-5 gap-2">
+                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day, index) => <div key={day} className={`rounded-2xl p-3 text-center text-xs font-bold ${index === 2 ? 'bg-primary text-primary-foreground' : 'bg-background'}`}><span>{day}</span><div className="mx-auto mt-3 h-12 w-8 rounded-full bg-secondary" /></div>)}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+          <Link to="/features"><Button className="mt-9 rounded-full px-7">Explore every feature</Button></Link>
+        </section>
 
-      {/* PROBLEM */}
-      <section className="bg-secondary/50 border-y border-border">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-          <div className="max-w-2xl mb-10">
-            <SectionLabel>The everyday problem</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-4">WHAT DO I WEAR TODAY?</h2>
-            <p className="text-muted-foreground text-lg">
-              It's the question that eats your mornings. For students, young professionals, and anyone
-              watching their budget, the answer is usually already hanging in the closet.
-            </p>
+        <section className="bg-foreground py-20 text-background md:py-28">
+          <div className="container mx-auto grid gap-12 px-4 md:px-6 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">Style intelligence</p>
+              <h2 className="mt-3 font-display text-4xl sm:text-5xl">IT UNDERSTANDS THE DAY AROUND THE OUTFIT.</h2>
+              <p className="mt-5 max-w-xl text-background/70">StyleSense is an intelligent wardrobe assistant, not a store. Every suggestion starts with your clothes and considers the context that makes an outfit useful.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {intelligence.map(item => <span key={item} className="rounded-full border border-background/25 px-4 py-2 text-sm">{item}</span>)}
+            </div>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {problems.map(p => (
-              <div key={p} className="bg-card border border-border rounded-2xl p-6">
-                <p className="text-base leading-relaxed">{p}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* VALUE PROPOSITION */}
-      <section className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <section className="container mx-auto grid gap-12 px-4 py-20 md:px-6 md:py-28 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <img src={communityImage} alt="Friends sharing personal style inspiration on a university campus" className="aspect-[3/2] w-full rounded-3xl object-cover" width={1536} height={1024} loading="lazy" />
           <div>
-            <SectionLabel>Why StyleSense exists</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-5">
-              MAKE MORE OUT OF THE WARDROBE YOU ALREADY HAVE.
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              StyleSense brings your closet into one place, understands what's in it, and puts pieces
-              together for you — with your taste, your week, and the weather in mind.
-            </p>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">Community inspiration</p>
+            <h2 className="font-display text-4xl sm:text-5xl">SEE HOW OTHER PEOPLE STYLE THEIRS.</h2>
+            <p className="mt-5 leading-relaxed text-muted-foreground">Browse real outfit ideas, react, rate, and share feedback inside the app. Over time, those interactions help StyleSense understand what people with similar taste enjoy.</p>
+            <p className="mt-4 text-sm font-bold">Lifestyle inspiration first. The learning happens quietly in the background.</p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-3">
-            {[
-              'Photo-based wardrobe', 'Clothing attribute recognition',
-              'Personalized suggestions', 'Content-based matching',
-              'Learning from the community', 'Fashion trend awareness',
-              'Weather and context', 'Your feedback', 'Outfit planning',
-            ].map(item => (
-              <div key={item} className="rounded-2xl border border-border bg-card px-4 py-3 text-sm font-medium">
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* FEATURES */}
-      <section id="features" className="bg-secondary/50 border-y border-border scroll-mt-16">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-          <div className="max-w-2xl mb-12">
-            <SectionLabel>Features</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl">
-              EVERYTHING IN THE STYLESENSE APP
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {features.map(f => (
-              <div key={f.title} className="bg-card border border-border rounded-3xl p-7 hover:border-primary transition-colors">
-                <h3 className="font-display text-xl mb-3">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* HYBRID RECOMMENDATION */}
-      <section className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-        <div className="max-w-2xl mb-12">
-          <SectionLabel>The recommendation system</SectionLabel>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-4">
-            IT LEARNS YOUR STYLE, NOT JUST YOUR CLOTHES.
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            No magic claims. StyleSense uses a hybrid approach that combines three sources of insight.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {hybrid.map((h, i) => (
-            <div key={h.title} className="rounded-3xl border border-border bg-card p-7">
-              <span className="font-display text-4xl text-accent">{`0${i + 1}`}</span>
-              <h3 className="font-display text-xl mt-3 mb-3">{h.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{h.desc}</p>
+        <section className="border-y border-border bg-accent/35 py-20 md:py-28">
+          <div className="container mx-auto grid gap-10 px-4 md:px-6 lg:grid-cols-2 lg:items-end">
+            <div>
+              <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">No New Clothes mode</p>
+              <h2 className="font-display text-4xl sm:text-6xl">YOUR NEXT OUTFIT MIGHT ALREADY BE IN YOUR CLOSET.</h2>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CONTEXT AWARE */}
-      <section className="bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24 grid lg:grid-cols-2 gap-12">
-          <div>
-            <p className="text-xs uppercase tracking-[0.25em] font-semibold mb-3 text-accent">Context-aware</p>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-5">
-              OUTFITS THAT FIT THE DAY, NOT JUST THE CLOSET.
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {context.map(c => (
-                <span key={c} className="text-sm rounded-full bg-primary-foreground/15 px-4 py-1.5">{c}</span>
-              ))}
+            <div>
+              <p className="text-lg leading-relaxed text-muted-foreground">For budget-conscious students, young professionals, and ukay-ukay lovers, buying more is not always the best first answer. StyleSense encourages creative reuse, better wardrobe value, and fewer unnecessary purchases.</p>
             </div>
           </div>
-          <div className="space-y-4">
-            {[
-              ['Rainy morning?', 'StyleSense can prioritize weather-appropriate pieces.'],
-              ['Presentation today?', 'It can lean toward your more formal clothing.'],
-              ['Don\'t want a repeat?', 'Yesterday\'s outfit influences what shows up today.'],
-            ].map(([q, a]) => (
-              <div key={q} className="rounded-2xl bg-primary-foreground/10 px-6 py-5">
-                <p className="font-display text-lg mb-1">{q}</p>
-                <p className="text-sm opacity-90">{a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* SIZE ADAPTABILITY */}
-      <section className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-        <div className="rounded-3xl bg-accent/35 border border-accent/50 p-8 sm:p-12 grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="font-display text-3xl sm:text-4xl mb-4">YOUR WARDROBE CHANGES. STYLESENSE ADAPTS.</h2>
-            <p className="text-base leading-relaxed">
-              Sizes shift, favorites wear out, and some pieces just stop fitting the way they used to.
-              StyleSense keeps your clothing information current so outdated details don't drag down
-              your recommendations.
-            </p>
+        <section className="container mx-auto px-4 py-20 md:px-6 md:py-28">
+          <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div><p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">Early voices</p><h2 className="font-display text-4xl sm:text-5xl">MADE FOR REAL WARDROBES.</h2></div>
+            <Link to="/testimonials" className="font-bold text-primary">Read all testimonials →</Link>
           </div>
-          <ul className="grid sm:grid-cols-2 gap-3">
-            {[
-              'Current clothing sizes',
-              'Fit feedback on items',
-              'Updated measurements you provide',
-              'How you interact with items',
-              'Changes in your wardrobe',
-              'Items consistently marked as not fitting',
-            ].map(i => (
-              <li key={i} className="rounded-2xl bg-background/80 px-4 py-3 text-sm font-medium">{i}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
+          <div className="grid gap-5 md:grid-cols-3">
+            {testimonials.slice(0, 3).map(item => <figure key={item.name} className="flex min-h-72 flex-col justify-between rounded-3xl border border-border bg-card p-7"><blockquote className="text-lg leading-relaxed">“{item.quote}”</blockquote><figcaption className="mt-8"><p className="font-bold">{item.name}</p><p className="text-sm text-muted-foreground">Placeholder · {item.context}</p></figcaption></figure>)}
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground">Placeholder testimonials prepared for replacement with approved research participant feedback.</p>
+        </section>
 
-      {/* HOW IT WORKS */}
-      <section id="how-it-works" className="bg-secondary/50 border-y border-border scroll-mt-16">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-          <div className="max-w-2xl mb-12">
-            <SectionLabel>How it works</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl">FIVE STEPS, THEN IT RUNS ITSELF</h2>
-          </div>
-          <div className="max-w-3xl">
-            {steps.map(s => (
-              <div key={s.n} className="flex gap-6 sm:gap-10 border-t border-border py-7 last:border-b">
-                <span className="font-display text-3xl sm:text-4xl text-accent shrink-0 w-14">{s.n}</span>
-                <div>
-                  <h3 className="font-display text-xl sm:text-2xl mb-1.5">{s.title}</h3>
-                  <p className="text-muted-foreground">{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* NO NEW CLOTHES */}
-      <section className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-        <div className="max-w-3xl mb-10">
-          <SectionLabel>No New Clothes</SectionLabel>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-5">
-            BEFORE YOU BUY MORE, CHECK WHAT YOU ALREADY HAVE.
-          </h2>
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            StyleSense is built to squeeze more out of the wardrobe you own. Better use of what's
-            already in your closet can also mean fewer purchases you didn't really need.
-          </p>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            ['Cost efficiency', 'Spend less by rediscovering what you own.'],
-            ['Wardrobe utilization', 'See which pieces rarely leave the shelf.'],
-            ['Creative reuse', 'New combinations from familiar clothes.'],
-            ['Less repetition', 'Frequency tracking keeps outfits varied.'],
-          ].map(([t, d]) => (
-            <div key={t} className="rounded-3xl border border-border bg-card p-6">
-              <h3 className="font-display text-lg mb-2">{t}</h3>
-              <p className="text-sm text-muted-foreground">{d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* COMMUNITY PREVIEW */}
-      <section className="bg-secondary/50 border-y border-border">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-          <div className="max-w-2xl mb-10">
-            <SectionLabel>Community</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-4">
-              SEE HOW OTHER PEOPLE STYLE THEIRS.
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Outfit discovery, likes, ratings, and feedback all live inside the app — and they help
-              recommendations get better for everyone.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              ['Campus Casual', 'Placeholder user'],
-              ['Rainy Day Layers', 'Placeholder user'],
-              ['Interview Ready', 'Placeholder user'],
-              ['Weekend Coffee Run', 'Placeholder user'],
-            ].map(([title, user], i) => (
-              <div key={title} className="rounded-3xl border border-border bg-card overflow-hidden">
-                <div className={`aspect-[4/5] ${['bg-accent/40', 'bg-primary/20', 'bg-fashion-rose/35', 'bg-fashion-sage/35'][i]}`} />
-                <div className="p-4">
-                  <p className="font-display text-base">{title}</p>
-                  <p className="text-xs text-muted-foreground">{user} · saved &amp; rated in-app</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* GET THE APP */}
-      <section id="get-the-app" className="container mx-auto px-4 md:px-6 py-16 md:py-24 scroll-mt-16">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <SectionLabel>Mobile first</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-5">
-              YOUR STYLE DOESN'T STAY ON THE WEBSITE.
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              StyleSense is made for the moment you're standing in front of your closet. Add your
-              clothes, answer a few questions about your style, and your first outfit suggestions
-              are ready in minutes.
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="rounded-2xl bg-foreground text-background px-6 py-3">
-                <p className="text-[10px] uppercase tracking-widest opacity-70">Coming soon on</p>
-                <p className="font-semibold">App Store</p>
-              </div>
-              <div className="rounded-2xl bg-foreground text-background px-6 py-3">
-                <p className="text-[10px] uppercase tracking-widest opacity-70">Coming soon on</p>
-                <p className="font-semibold">Google Play</p>
-              </div>
-              <div className="rounded-2xl border-2 border-dashed border-border p-3 text-center">
-                <div className="w-20 h-20 bg-secondary rounded-xl flex items-center justify-center text-[10px] text-muted-foreground text-center px-2">
-                  QR code placeholder
-                </div>
+        <section id="get-the-app" className="overflow-hidden bg-primary py-20 text-primary-foreground md:py-28 scroll-mt-20">
+          <div className="container mx-auto grid gap-12 px-4 md:px-6 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">The StyleSense app</p>
+              <h2 className="mt-3 font-display text-4xl sm:text-6xl">YOUR WARDROBE. YOUR STYLE. ONE SMARTER WAY TO DRESS.</h2>
+              <p className="mt-5 max-w-xl text-lg text-primary-foreground/75">Your wardrobe, outfit generator, recommendations, and weekly planner belong together in the mobile-first StyleSense experience.</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button size="lg" className="rounded-full bg-accent px-8 text-accent-foreground hover:bg-background">Get the StyleSense App</Button>
+                <div className="rounded-2xl border border-primary-foreground/25 px-5 py-2 text-sm"><span className="block text-[10px] uppercase opacity-70">App stores</span><strong>Coming soon</strong></div>
               </div>
             </div>
+            <PhonePreview />
           </div>
-          <div className="relative">
-            <div className="absolute inset-8 rounded-[3rem] bg-primary/15" aria-hidden />
-            <div className="relative py-8"><PhoneMockup /></div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ONBOARDING */}
-      <section className="bg-secondary/50 border-y border-border">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24 max-w-3xl">
-          <div className="mb-8 text-center">
-            <SectionLabel>Quick start</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl">LET'S FIND YOUR STARTING POINT</h2>
+        <section className="container mx-auto px-4 py-20 md:px-6 md:py-28">
+          <div className="mx-auto max-w-3xl">
+            <div className="mb-8 flex items-end justify-between gap-4"><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">Frequently asked</p><h2 className="font-display text-4xl sm:text-5xl">A FEW THINGS TO KNOW.</h2></div></div>
+            <Accordion type="single" collapsible className="space-y-3">
+              {homepageFaqs.map(([question, answer], index) => <AccordionItem key={question} value={`home-${index}`} className="rounded-2xl border border-border bg-card px-5"><AccordionTrigger className="text-left hover:no-underline">{question}</AccordionTrigger><AccordionContent className="leading-relaxed text-muted-foreground">{answer}</AccordionContent></AccordionItem>)}
+            </Accordion>
+            <Link to="/faq"><Button variant="outline" className="mt-7 rounded-full">View the full FAQ</Button></Link>
           </div>
-          <OnboardingQuiz />
-        </div>
-      </section>
+        </section>
 
-      {/* TESTIMONIALS */}
-      <section id="testimonials" className="container mx-auto px-4 md:px-6 py-16 md:py-24 scroll-mt-16">
-        <div className="max-w-2xl mb-12">
-          <SectionLabel>Testimonials</SectionLabel>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-3">WORDS FROM EARLY USERS</h2>
-          <p className="text-muted-foreground">
-            Placeholder quotes for now — these will be replaced with feedback from real research
-            participants.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {testimonials.map((t, i) => (
-            <figure key={i} className="rounded-3xl border border-border bg-card p-7 flex flex-col">
-              <blockquote className="text-base leading-relaxed flex-1">"{t.quote}"</blockquote>
-              <figcaption className="mt-6 flex items-center gap-3">
-                <span className="w-10 h-10 rounded-full bg-accent/50" />
-                <span>
-                  <span className="block font-semibold text-sm">{t.name}</span>
-                  <span className="block text-xs text-muted-foreground">{t.role}</span>
-                </span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section className="bg-secondary/50 border-y border-border">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-          <div className="max-w-2xl mb-10">
-            <SectionLabel>Pricing</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl">SIMPLE, WHEN IT'S READY</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-5 max-w-3xl">
-            <div className="rounded-3xl border border-border bg-card p-8">
-              <h3 className="font-display text-2xl mb-1">Free</h3>
-              <p className="text-sm text-muted-foreground mb-6">For basic StyleSense features.</p>
-              <span className="inline-block text-xs font-semibold rounded-full bg-secondary px-3 py-1.5">Available at launch</span>
-            </div>
-            <div className="rounded-3xl border-2 border-accent bg-card p-8">
-              <h3 className="font-display text-2xl mb-1">StyleSense Plus</h3>
-              <p className="text-sm text-muted-foreground mb-6">For future premium features.</p>
-              <span className="inline-block text-xs font-semibold rounded-full bg-accent text-accent-foreground px-3 py-1.5">Coming Soon</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ABOUT */}
-      <section id="about" className="container mx-auto px-4 md:px-6 py-16 md:py-24 scroll-mt-16">
-        <div className="grid lg:grid-cols-2 gap-12">
-          <div>
-            <SectionLabel>About</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-5">THE PROJECT BEHIND STYLESENSE</h2>
-            <Link to="/help">
-              <Button variant="outline" className="rounded-full">Learn About the Project</Button>
-            </Link>
-          </div>
-          <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-            <p>
-              StyleSense started as a research project: an image-based wardrobe and outfit
-              recommendation system built to help people get more out of the clothes they already own.
-            </p>
-            <p>
-              It brings together clothing recognition, personalized recommendations, hybrid
-              recommendation techniques, outfit planning, and context-aware suggestions — packaged in
-              something that feels friendly enough to open every morning.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="bg-secondary/50 border-y border-border scroll-mt-16">
-        <div className="container mx-auto px-4 md:px-6 py-16 md:py-24 max-w-3xl">
-          <div className="mb-10">
-            <SectionLabel>FAQ</SectionLabel>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl">QUESTIONS, ANSWERED</h2>
-          </div>
-          <Accordion type="single" collapsible className="space-y-3">
-            {faqs.map((f, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="border border-border rounded-2xl bg-card px-5">
-                <AccordionTrigger className="text-left font-semibold hover:no-underline">{f.q}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
-      <section className="container mx-auto px-4 md:px-6 py-20 md:py-28 text-center max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl mb-5">
-          YOUR CLOSET HAS MORE STORIES TO TELL.
-        </h2>
-        <p className="text-muted-foreground text-lg mb-9">
-          Discover new ways to wear what you already own with StyleSense.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="#get-the-app"><Button size="lg" className="rounded-full px-8 w-full sm:w-auto">Get the App</Button></a>
-          <a href="#features"><Button size="lg" variant="outline" className="rounded-full px-8 w-full sm:w-auto">Explore StyleSense</Button></a>
-        </div>
-      </section>
-
+        <section className="border-t border-border px-4 py-24 text-center md:py-32">
+          <div className="mx-auto max-w-3xl"><h2 className="font-display text-4xl sm:text-6xl">MAKE MORE OUTFITS FROM WHAT YOU ALREADY OWN.</h2><p className="mt-5 text-lg text-muted-foreground">Discover your wardrobe differently with StyleSense.</p><a href="#get-the-app"><Button size="lg" className="mt-8 rounded-full px-9">Get the App</Button></a></div>
+        </section>
+      </main>
       <MarketingFooter />
     </div>
   );

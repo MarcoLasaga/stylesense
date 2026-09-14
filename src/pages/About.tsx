@@ -1,0 +1,14 @@
+import { PublicPage, AppCta } from '@/components/marketing/PublicPage';
+import heroImage from '@/assets/stylesense-hero.jpg';
+
+export default function About() {
+  return (
+    <PublicPage eyebrow="About StyleSense" title="Personal style should begin with your own wardrobe." intro="StyleSense is a research and development project exploring how wardrobe data, personal feedback, and everyday context can make getting dressed easier.">
+      <section className="container mx-auto px-4 py-20 md:px-6 md:py-28"><img src={heroImage} alt="Choosing an outfit from a personal wardrobe" className="max-h-[680px] w-full rounded-3xl object-cover object-center" width={1920} height={1280} /></section>
+      <section className="border-y border-border bg-secondary/45"><div className="container mx-auto grid gap-12 px-4 py-20 md:px-6 md:py-28 lg:grid-cols-2"><div><p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">The problem</p><h2 className="mt-3 font-display text-4xl sm:text-5xl">A FULL CLOSET CAN STILL FEEL EMPTY.</h2></div><div className="space-y-5 text-lg leading-relaxed text-muted-foreground"><p>People forget what they own, repeat a narrow set of outfits, and spend money on pieces that solve a problem their wardrobe could already handle.</p><p>StyleSense was created to make existing clothes easier to see, combine, plan, and enjoy.</p></div></div></section>
+      <section className="container mx-auto px-4 py-20 md:px-6 md:py-28"><div className="grid gap-10 lg:grid-cols-3"><div><h2 className="font-display text-3xl">Who it is for</h2><p className="mt-4 text-muted-foreground">Students, young professionals, second-hand clothing users, budget-conscious shoppers, and anyone who wants simpler daily outfit decisions.</p></div><div><h2 className="font-display text-3xl">What it values</h2><p className="mt-4 text-muted-foreground">Wardrobe accessibility, practical personalization, confidence, creative reuse, and better value from clothing already owned.</p></div><div><h2 className="font-display text-3xl">What it is not</h2><p className="mt-4 text-muted-foreground">It is not a shopping marketplace or a promise that software will choose your identity. You remain in control of your style.</p></div></div></section>
+      <section className="bg-primary py-20 text-primary-foreground md:py-28"><div className="container mx-auto max-w-4xl px-4 text-center md:px-6"><p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">Research made approachable</p><h2 className="mt-3 font-display text-4xl sm:text-5xl">SERIOUS RECOMMENDATION WORK, DESIGNED FOR AN ORDINARY MORNING.</h2><p className="mx-auto mt-5 max-w-2xl text-primary-foreground/75">The project combines clothing recognition, hybrid recommendation techniques, contextual information, outfit planning, wear history, and user feedback without turning the experience into an academic paper.</p></div></section>
+      <AppCta />
+    </PublicPage>
+  );
+}
