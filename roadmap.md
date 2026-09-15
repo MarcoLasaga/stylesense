@@ -5,4 +5,4 @@
 - [x] Update public navigation to use dedicated routes and preserve app/admin routes
 - [x] Create a branded custom 404 page
 - [x] Add original fashion/lifestyle imagery and device previews
-- [ ] Verify desktop and mobile layouts, links, build, and runtime
+- [x] Verify desktop and mobile layouts, links, build, and runtime
