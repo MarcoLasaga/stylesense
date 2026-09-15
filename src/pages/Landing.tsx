@@ -51,7 +51,7 @@ export default function Landing() {
           <img src={heroImage} alt="A woman choosing between outfits beside her personal wardrobe" className="absolute inset-0 h-full w-full object-cover object-[62%_center]" width={1920} height={1280} fetchPriority="high" />
           <div className="absolute inset-0 bg-foreground/10" />
           <div className="relative container mx-auto flex min-h-[92svh] items-end px-4 pb-14 pt-28 md:items-center md:px-6 md:pb-10">
-            <div className="max-w-2xl rounded-[2rem] bg-background/92 p-7 shadow-sm backdrop-blur-sm sm:p-10 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
+            <div className="max-w-2xl rounded-[2rem] bg-background/95 p-7 shadow-sm sm:p-10 md:bg-transparent md:p-0 md:shadow-none">
               <p className="mb-4 text-sm font-bold text-primary md:text-foreground">Your wardrobe, reimagined.</p>
               <h1 className="font-display text-4xl leading-[1.02] sm:text-5xl md:text-7xl">Style starts with what you already own.</h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg md:text-foreground/80">StyleSense turns the clothes in your wardrobe into personalized outfit recommendations made for your style, schedule, and everyday life.</p>

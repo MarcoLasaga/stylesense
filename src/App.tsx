@@ -4,6 +4,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Landing from "./pages/Landing";
+import Features from "./pages/Features";
+import HowItWorks from "./pages/HowItWorks";
+import About from "./pages/About";
+import Testimonials from "./pages/Testimonials";
+import FAQ from "./pages/FAQ";
 import Wardrobe from "./pages/Wardrobe";
 import UploadClothes from "./pages/UploadClothes";
 import OutfitGenerator from "./pages/OutfitGenerator";
@@ -42,6 +47,11 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/testimonials" element={<Testimonials />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/wardrobe" element={<Wardrobe />} />
           <Route path="/wardrobe/:id" element={<ClothingDetail />} />
           <Route path="/favorites" element={<FavoriteOutfits />} />
