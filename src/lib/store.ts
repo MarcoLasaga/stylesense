@@ -88,6 +88,12 @@ export const saveProfile = (p: UserProfile): void => {
 // ── Auth ─────────────────────────────────────────────────
 export const isLoggedIn = (): boolean => localStorage.getItem(KEYS.auth) === 'true';
 
+export const setAuthState = (loggedIn: boolean): void => {
+  if (loggedIn) localStorage.setItem(KEYS.auth, 'true');
+  else localStorage.removeItem(KEYS.auth);
+  window.dispatchEvent(new Event('stylesense-auth-change'));
+};
+
 export const isAdmin = (): boolean => {
   if (!isLoggedIn()) return false;
   return getProfile().role === 'admin';
@@ -101,7 +107,7 @@ export const login = (email: string, pw: string): boolean => {
 
   if (user && storedPw === pw) {
     localStorage.setItem(KEYS.profile, JSON.stringify(user));
-    localStorage.setItem(KEYS.auth, 'true');
+    setAuthState(true);
     return true;
   }
 
@@ -129,11 +135,11 @@ export const signup = (name: string, email: string, pw: string): boolean => {
   };
   localStorage.setItem(`ss_pw_${email}`, pw);
   saveProfile(p);
-  localStorage.setItem(KEYS.auth, 'true');
+  setAuthState(true);
   return true;
 };
 
-export const logout = (): void => { localStorage.removeItem(KEYS.auth); };
+export const logout = (): void => { setAuthState(false); };
 
 // ── Users (Admin) ────────────────────────────────────────
 export const getAllUsers = (): UserProfile[] => {

@@ -57,6 +57,7 @@ export default {
           sage: "hsl(var(--fashion-sage))",
           navy: "hsl(var(--fashion-navy))",
           cream: "hsl(var(--fashion-cream))",
+          "cream-deep": "hsl(var(--fashion-cream-deep))",
           charcoal: "hsl(var(--fashion-charcoal))",
         },
         sidebar: {
@@ -74,6 +75,10 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        soft: "var(--shadow-soft)",
+        editorial: "var(--shadow-editorial)",
       },
       keyframes: {
         "accordion-down": {

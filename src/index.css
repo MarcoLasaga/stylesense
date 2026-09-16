@@ -13,24 +13,24 @@
     --popover: 0 0% 100%;
     --popover-foreground: 250 15% 15%;
 
-    --primary: 249 20% 53%;
-    --primary-foreground: 38 44% 97%;
+    --primary: 39 100% 76%;
+    --primary-foreground: 250 25% 18%;
 
-    --secondary: 39 60% 92%;
-    --secondary-foreground: 250 18% 25%;
+    --secondary: 249 20% 53%;
+    --secondary-foreground: 38 44% 97%;
 
     --muted: 38 30% 93%;
     --muted-foreground: 249 10% 42%;
 
-    --accent: 39 100% 76%;
-    --accent-foreground: 250 25% 18%;
+    --accent: 249 20% 53%;
+    --accent-foreground: 38 44% 97%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 38 25% 88%;
     --input: 38 25% 88%;
-    --ring: 249 20% 53%;
+    --ring: 39 100% 76%;
 
     --radius: 1rem;
 
@@ -49,7 +49,11 @@
     --fashion-sage: 150 20% 70%;
     --fashion-navy: 249 20% 35%;
     --fashion-cream: 38 44% 96%;
+    --fashion-cream-deep: 39 46% 92%;
     --fashion-charcoal: 250 15% 20%;
+
+    --shadow-soft: 0 8px 28px -18px hsl(250 15% 15% / 0.24);
+    --shadow-editorial: 0 24px 70px -32px hsl(250 15% 15% / 0.3);
 
     --font-display: 'Bagel Fat One', cursive;
     --font-body: 'Baloo Tamma 2', system-ui, sans-serif;
@@ -65,17 +69,17 @@
     --popover: 250 16% 14%;
     --popover-foreground: 38 40% 94%;
 
-    --primary: 249 30% 68%;
+    --primary: 39 92% 70%;
     --primary-foreground: 250 20% 12%;
 
-    --secondary: 250 14% 20%;
-    --secondary-foreground: 38 40% 94%;
+    --secondary: 249 25% 65%;
+    --secondary-foreground: 250 20% 12%;
 
     --muted: 250 12% 22%;
     --muted-foreground: 38 15% 70%;
 
-    --accent: 39 100% 76%;
-    --accent-foreground: 250 25% 15%;
+    --accent: 249 25% 65%;
+    --accent-foreground: 250 20% 12%;
 
     --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 100%;
@@ -83,6 +87,10 @@
     --border: 250 12% 24%;
     --input: 250 12% 24%;
     --ring: 39 100% 76%;
+
+    --fashion-cream-deep: 250 14% 18%;
+    --shadow-soft: 0 8px 28px -18px hsl(0 0% 0% / 0.55);
+    --shadow-editorial: 0 24px 70px -32px hsl(0 0% 0% / 0.7);
 
     --sidebar-background: 250 18% 12%;
     --sidebar-foreground: 38 30% 88%;
@@ -120,5 +128,27 @@
   }
   .font-body {
     font-family: var(--font-body);
+  }
+  .eyebrow {
+    @apply text-xs font-bold uppercase text-secondary;
+    letter-spacing: 0.16em;
+  }
+  .section-title {
+    @apply font-display text-4xl leading-[1.08] sm:text-5xl;
+  }
+  .editorial-section {
+    @apply py-20 md:py-28;
+  }
+  .editorial-tint {
+    background: hsl(var(--fashion-cream-deep));
+  }
+  .rounded-editorial {
+    border-radius: 1.5rem;
+  }
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .shadow-editorial {
+    box-shadow: var(--shadow-editorial);
   }
 }
