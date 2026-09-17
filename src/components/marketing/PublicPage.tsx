@@ -10,7 +10,6 @@ export function PublicPage({ eyebrow, title, intro, children }: { eyebrow: strin
       <MarketingNav />
       <main>
         <header className="relative overflow-hidden border-b border-border bg-fashion-cream-deep px-4 pb-16 pt-32 md:pb-24 md:pt-40">
-          <div className="absolute -right-20 top-24 h-64 w-64 rounded-full bg-primary/30 blur-3xl" aria-hidden="true" />
           <div className="container mx-auto max-w-5xl px-0 md:px-6">
             <p className="eyebrow mb-4">{eyebrow}</p>
             <h1 className="max-w-4xl font-display text-4xl leading-[1.05] sm:text-5xl md:text-7xl">{title}</h1>

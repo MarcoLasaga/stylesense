@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
@@ -17,6 +17,7 @@ export const marketingLinks = [
 export default function MarketingNav() {
   const [open, setOpen] = useState(false);
   const isAuthenticated = useAuthState();
+  const location = useLocation();
 
   if (isAuthenticated) return <Navbar />;
 
@@ -43,7 +44,7 @@ export default function MarketingNav() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <Link to="/login" className="text-xs font-semibold text-muted-foreground hover:text-foreground">Sign In</Link>
-          <Link to="/download"><Button size="sm" className="h-9 rounded-full px-5">Get the App</Button></Link>
+          <Link to="/download"><Button size="sm" variant={location.pathname === '/download' ? 'secondary' : 'default'} className="h-9 rounded-full px-5">Get the App</Button></Link>
         </div>
 
         <Button variant="ghost" size="icon" className="rounded-full lg:hidden" onClick={() => setOpen(value => !value)} aria-label="Toggle navigation" aria-expanded={open}>
