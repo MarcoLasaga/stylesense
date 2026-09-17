@@ -26,6 +26,7 @@ import ClothingDetail from "./pages/ClothingDetail";
 import FavoriteOutfits from "./pages/FavoriteOutfits";
 import OutfitHistory from "./pages/OutfitHistory";
 import PackingAssistant from "./pages/PackingAssistant";
+import Download from "./pages/Download";
 
 // Admin pages
 import AdminOverview from "./pages/admin/AdminOverview";
@@ -52,6 +53,8 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/download" element={<Download />} />
+          <Route path="/404" element={<NotFound />} />
           <Route path="/wardrobe" element={<Wardrobe />} />
           <Route path="/wardrobe/:id" element={<ClothingDetail />} />
           <Route path="/favorites" element={<FavoriteOutfits />} />

@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import MarketingFooter from '@/components/marketing/MarketingFooter';
-import heroImage from '@/assets/stylesense-hero.jpg';
+import heroImage from '@/assets/stylesense-hero-editorial.jpg';
 import wardrobeImage from '@/assets/wardrobe-editorial.jpg';
 import communityImage from '@/assets/community-editorial.jpg';
 import { faqGroups, testimonials } from '@/data/marketingContent';
+import MobileAppPreview from '@/components/marketing/MobileAppPreview';
 
 const steps = [
   ['01', 'Add your clothes', 'Upload or capture the clothing you already own.'],
@@ -17,29 +18,6 @@ const steps = [
 
 const intelligence = ['Clothing attributes', 'Personal style', 'Previous interactions', 'Outfit ratings', 'Wear frequency', 'Occasion', 'Weather', 'Location', 'Fashion trends', 'Fit and size'];
 
-function PhonePreview() {
-  return (
-    <div className="mx-auto w-[250px] overflow-hidden rounded-[2.75rem] border-[9px] border-foreground bg-background shadow-2xl sm:w-[290px]">
-      <div className="h-7 bg-foreground" />
-      <div className="p-4">
-        <p className="text-xs font-bold text-primary">Good morning, Mika</p>
-        <h3 className="mt-1 font-display text-xl">Your outfit for today</h3>
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <div className="aspect-[3/4] rounded-2xl bg-accent/60" />
-          <div className="aspect-[3/4] rounded-2xl bg-primary/30" />
-          <div className="aspect-[3/4] rounded-2xl bg-fashion-rose/45" />
-          <div className="aspect-[3/4] rounded-2xl bg-secondary" />
-        </div>
-        <div className="mt-3 rounded-2xl bg-secondary px-3 py-2">
-          <p className="text-[11px] text-muted-foreground">Warm · Casual · No recent repeats</p>
-          <p className="text-xs font-bold">A strong match for your day</p>
-        </div>
-        <div className="mt-3 rounded-full bg-accent py-2 text-center text-xs font-bold text-accent-foreground">Save this outfit</div>
-      </div>
-    </div>
-  );
-}
-
 export default function Landing() {
   const homepageFaqs = faqGroups.flatMap(group => group.items).slice(0, 6);
 
@@ -47,43 +25,45 @@ export default function Landing() {
     <div className="min-h-screen bg-background">
       <MarketingNav />
       <main>
-        <section className="relative min-h-[92svh] overflow-hidden">
-          <img src={heroImage} alt="A woman choosing between outfits beside her personal wardrobe" className="absolute inset-0 h-full w-full object-cover object-[62%_center]" width={1920} height={1280} fetchPriority="high" />
-          <div className="absolute inset-0 bg-foreground/10" />
-          <div className="relative container mx-auto flex min-h-[92svh] items-end px-4 pb-14 pt-28 md:items-center md:px-6 md:pb-10">
-            <div className="max-w-2xl rounded-[2rem] bg-background/95 p-7 shadow-sm sm:p-10 md:bg-transparent md:p-0 md:shadow-none">
-              <p className="mb-4 text-sm font-bold text-primary md:text-foreground">Your wardrobe, reimagined.</p>
-              <h1 className="font-display text-4xl leading-[1.02] sm:text-5xl md:text-7xl">Style starts with what you already own.</h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg md:text-foreground/80">StyleSense turns the clothes in your wardrobe into personalized outfit recommendations made for your style, schedule, and everyday life.</p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="#get-the-app"><Button size="lg" className="h-12 w-full rounded-full px-8 sm:w-auto">Get the App</Button></a>
-                <Link to="/how-it-works"><Button size="lg" variant="outline" className="h-12 w-full rounded-full bg-background/90 px-8 sm:w-auto">Explore How It Works</Button></Link>
+        <section className="relative bg-fashion-cream-deep px-3 pb-3 pt-3 sm:px-5 sm:pb-5 sm:pt-5">
+          <div className="relative mx-auto min-h-[calc(100svh-1.5rem)] max-w-[1500px] overflow-hidden rounded-editorial shadow-editorial">
+            <img src={heroImage} alt="A woman thoughtfully choosing clothes from her personal wardrobe" className="absolute inset-0 h-full w-full object-cover object-[70%_center]" width={1920} height={1200} fetchPriority="high" />
+            <div className="absolute inset-y-0 left-0 w-[62%] bg-background/12" aria-hidden="true" />
+            <div className="relative container mx-auto flex min-h-[calc(100svh-1.5rem)] items-center px-5 pb-16 pt-28 sm:px-10 md:px-14 lg:px-20">
+              <div className="max-w-2xl">
+                <p className="eyebrow mb-5">Your wardrobe, reimagined.</p>
+                <h1 className="font-display text-5xl leading-[1.01] sm:text-6xl lg:text-7xl xl:text-8xl">Style starts with what you already own.</h1>
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-foreground/75 sm:text-lg">StyleSense turns the clothes in your wardrobe into personalized outfit recommendations made for your style, schedule, and everyday life.</p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Button asChild size="lg" className="h-12 w-full rounded-full px-8 sm:w-auto"><Link to="/download">Get the App</Link></Button>
+                  <Button asChild size="lg" variant="outline" className="h-12 w-full rounded-full bg-background/90 px-8 sm:w-auto"><Link to="/how-it-works">Explore How It Works</Link></Button>
+                </div>
               </div>
             </div>
+            <a href="#introduction" className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 text-xs font-bold uppercase text-foreground/70 md:block" style={{ letterSpacing: '0.16em' }}>Scroll to discover</a>
           </div>
-          <a href="#introduction" className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 text-xs font-bold uppercase tracking-[0.2em] text-foreground md:block">Scroll to discover ↓</a>
         </section>
 
-        <section id="introduction" className="container mx-auto grid gap-12 px-4 py-20 md:px-6 md:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+        <section id="introduction" className="container mx-auto grid gap-12 px-4 py-24 md:px-6 md:py-32 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">A better first choice</p>
+            <p className="eyebrow mb-3">A better first choice</p>
             <h2 className="font-display text-4xl leading-tight sm:text-5xl">MORE OUTFITS. LESS SHOPPING.</h2>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">The answer to “what should I wear?” may already be hanging in your closet. StyleSense helps uncover overlooked combinations, reduce repetition, and make everyday dressing feel easier.</p>
-            <Link to="/about" className="mt-7 inline-block font-bold text-primary underline decoration-accent decoration-4 underline-offset-8">Why we built StyleSense</Link>
+            <Link to="/about" className="mt-7 inline-block font-bold text-secondary underline decoration-primary decoration-4 underline-offset-8">Why we built StyleSense</Link>
           </div>
           <img src={wardrobeImage} alt="Several outfits arranged from an existing personal wardrobe" className="aspect-[3/2] w-full rounded-3xl object-cover" width={1536} height={1024} loading="lazy" />
         </section>
 
-        <section className="border-y border-border bg-secondary/45 py-20 md:py-28">
+        <section className="border-y border-border bg-fashion-cream-deep py-20 md:py-28">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mb-12 max-w-2xl">
-              <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">How StyleSense works</p>
+              <p className="eyebrow mb-3">How StyleSense works</p>
               <h2 className="font-display text-4xl sm:text-5xl">FROM CLOSET TO OUTFIT, WITHOUT THE GUESSWORK.</h2>
             </div>
             <div className="border-y border-border">
               {steps.map(([number, title, copy]) => (
                 <div key={number} className="grid gap-2 border-b border-border py-7 last:border-b-0 sm:grid-cols-[90px_1fr_1fr] sm:items-baseline sm:gap-8">
-                  <span className="font-display text-3xl text-accent">{number}</span>
+                  <span className="font-display text-3xl text-secondary">{number}</span>
                   <h3 className="font-display text-xl sm:text-2xl">{title}</h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">{copy}</p>
                 </div>
@@ -179,18 +159,18 @@ export default function Landing() {
           <p className="mt-4 text-xs text-muted-foreground">Placeholder testimonials prepared for replacement with approved research participant feedback.</p>
         </section>
 
-        <section id="get-the-app" className="overflow-hidden bg-primary py-20 text-primary-foreground md:py-28 scroll-mt-20">
+        <section id="get-the-app" className="overflow-hidden border-y border-border bg-secondary py-20 text-secondary-foreground md:py-28 scroll-mt-20">
           <div className="container mx-auto grid gap-12 px-4 md:px-6 lg:grid-cols-2 lg:items-center">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">The StyleSense app</p>
+              <p className="text-xs font-bold uppercase text-primary" style={{ letterSpacing: '0.16em' }}>The StyleSense app</p>
               <h2 className="mt-3 font-display text-4xl sm:text-6xl">YOUR WARDROBE. YOUR STYLE. ONE SMARTER WAY TO DRESS.</h2>
-              <p className="mt-5 max-w-xl text-lg text-primary-foreground/75">Your wardrobe, outfit generator, recommendations, and weekly planner belong together in the mobile-first StyleSense experience.</p>
+              <p className="mt-5 max-w-xl text-lg text-secondary-foreground/75">Your wardrobe, outfit generator, recommendations, and weekly planner belong together in the mobile-first StyleSense experience.</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Button size="lg" className="rounded-full bg-accent px-8 text-accent-foreground hover:bg-background">Get the StyleSense App</Button>
-                <div className="rounded-2xl border border-primary-foreground/25 px-5 py-2 text-sm"><span className="block text-[10px] uppercase opacity-70">App stores</span><strong>Coming soon</strong></div>
+                <Button asChild size="lg" className="rounded-full px-8"><Link to="/download">Get the StyleSense App</Link></Button>
+                <div className="rounded-2xl border border-secondary-foreground/25 px-5 py-2 text-sm"><span className="block text-[10px] uppercase opacity-70">App stores</span><strong>Coming soon</strong></div>
               </div>
             </div>
-            <PhonePreview />
+            <MobileAppPreview />
           </div>
         </section>
 
@@ -205,7 +185,7 @@ export default function Landing() {
         </section>
 
         <section className="border-t border-border px-4 py-24 text-center md:py-32">
-          <div className="mx-auto max-w-3xl"><h2 className="font-display text-4xl sm:text-6xl">MAKE MORE OUTFITS FROM WHAT YOU ALREADY OWN.</h2><p className="mt-5 text-lg text-muted-foreground">Discover your wardrobe differently with StyleSense.</p><a href="#get-the-app"><Button size="lg" className="mt-8 rounded-full px-9">Get the App</Button></a></div>
+          <div className="mx-auto max-w-3xl"><h2 className="font-display text-4xl sm:text-6xl">MAKE MORE OUTFITS FROM WHAT YOU ALREADY OWN.</h2><p className="mt-5 text-lg text-muted-foreground">Discover your wardrobe differently with StyleSense.</p><Button asChild size="lg" className="mt-8 rounded-full px-9"><Link to="/download">Get the App</Link></Button></div>
         </section>
       </main>
       <MarketingFooter />

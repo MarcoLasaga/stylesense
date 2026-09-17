@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Menu, X, Shield, LogOut, Home, Shirt, Compass, CalendarDays, Bell, Search,
+  Menu, X, Shield, LogOut, Shirt, Compass, CalendarDays, Bell, Search,
   ChevronDown, BarChart3, History, Users as UsersIcon, Bookmark, Settings, HelpCircle, User, Heart, Luggage
 } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
@@ -12,10 +12,10 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { syncLocalProfileFromCloud, isCloudAdmin } from '@/lib/socialStore';
 
 const primaryNav = [
-  { path: '/', label: 'Home', icon: Home },
   { path: '/wardrobe', label: 'Wardrobe', icon: Shirt },
-  { path: '/feed', label: 'Discover', icon: Compass },
+  { path: '/outfits', label: 'Outfits', icon: Compass },
   { path: '/planner', label: 'Planner', icon: CalendarDays },
+  { path: '/feed', label: 'Community', icon: UsersIcon },
 ];
 
 const moreNav = [
@@ -31,7 +31,6 @@ const moreNav = [
 ];
 
 const mobileNav = [
-  { path: '/', label: 'Home', icon: Home },
   { path: '/wardrobe', label: 'My Wardrobe', icon: Shirt },
   { path: '/upload', label: 'Add Clothes', icon: Shirt },
   { path: '/outfits', label: 'Outfit Generator', icon: Compass },
@@ -96,7 +95,7 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/85 backdrop-blur-md border-b border-border">
       <div className="container mx-auto flex items-center gap-4 h-16 px-4 md:px-6">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 shrink-0">
+        <Link to={loggedIn ? '/wardrobe' : '/'} className="flex items-center gap-2 shrink-0">
           <div className="w-9 h-9 rounded-xl bg-accent text-accent-foreground flex items-center justify-center font-display text-lg">
             S
           </div>
@@ -138,12 +137,14 @@ export default function Navbar() {
 
           {/* More dropdown */}
           <div ref={moreRef} className="relative">
-            <button
+              <Button
+                type="button"
+                variant="ghost"
               onClick={() => setMoreOpen(v => !v)}
-              className="px-3 py-2 rounded-full text-sm font-medium flex items-center gap-1 text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                className="rounded-full px-3 text-sm font-medium text-muted-foreground hover:text-foreground"
             >
               More <ChevronDown className="h-3.5 w-3.5" />
-            </button>
+              </Button>
             {moreOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-popover border border-border rounded-xl shadow-lg overflow-hidden py-1.5">
                 {moreNav.map(item => (
@@ -211,13 +212,15 @@ export default function Navbar() {
               </Avatar>
             </Link>
           )}
-          <button
-            className="p-2 rounded-lg hover:bg-secondary"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-lg"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -254,12 +257,13 @@ export default function Navbar() {
                     <Shield className="h-5 w-5 text-accent" /> Admin Panel
                   </Link>
                 )}
-                <button
+                <Button
+                  variant="ghost"
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-secondary text-left"
+                  className="h-auto w-full justify-start gap-3 rounded-lg px-3 py-3 text-sm font-medium"
                 >
                   <LogOut className="h-5 w-5 text-muted-foreground" /> Logout
-                </button>
+                </Button>
               </>
             ) : (
               <Link to="/login" onClick={() => setOpen(false)}>

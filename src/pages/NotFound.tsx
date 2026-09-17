@@ -16,7 +16,7 @@ const NotFound = () => {
       <MarketingNav />
       <main className="container mx-auto grid min-h-screen items-center gap-12 px-4 pb-16 pt-28 md:px-6 lg:grid-cols-2">
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">404 · Missing page</p>
+          <p className="eyebrow mb-3">404 · Missing page</p>
           <h1 className="font-display text-5xl leading-tight sm:text-6xl">LOOKS LIKE THIS OUTFIT DOESN'T EXIST.</h1>
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">
             The page you're looking for may have moved, disappeared, or never made it into the wardrobe.
@@ -26,7 +26,7 @@ const NotFound = () => {
             <Link to="/features"><Button size="lg" variant="outline" className="w-full rounded-full px-8 sm:w-auto">Explore StyleSense</Button></Link>
           </div>
         </div>
-        <img src={wardrobeImage} alt="Clothes arranged into possible outfits" className="aspect-[4/3] w-full rounded-3xl object-cover" width={1536} height={1024} />
+        <img src={wardrobeImage} alt="Clothes arranged into possible outfits" className="aspect-[4/3] w-full rounded-editorial object-cover shadow-editorial" width={1536} height={1024} />
       </main>
     </div>
   );
