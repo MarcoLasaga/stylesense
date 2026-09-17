@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Menu, X, Shield, LogOut, Home, Shirt, Compass, CalendarDays, Bell, Search,
+  Menu, X, Shield, LogOut, Shirt, Compass, CalendarDays, Bell, Search,
   ChevronDown, BarChart3, History, Users as UsersIcon, Bookmark, Settings, HelpCircle, User, Heart, Luggage
 } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
@@ -95,7 +95,7 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/85 backdrop-blur-md border-b border-border">
       <div className="container mx-auto flex items-center gap-4 h-16 px-4 md:px-6">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 shrink-0">
+        <Link to={loggedIn ? '/wardrobe' : '/'} className="flex items-center gap-2 shrink-0">
           <div className="w-9 h-9 rounded-xl bg-accent text-accent-foreground flex items-center justify-center font-display text-lg">
             S
           </div>

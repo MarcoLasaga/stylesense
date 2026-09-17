@@ -25,10 +25,14 @@ export default function Login() {
       if (data.session) {
         await syncLocalProfileFromCloud();
         const adm = await isCloudAdmin();
+        if (new URLSearchParams(window.location.search).get('oauth') === '1') {
+          navigate(adm ? '/admin' : '/wardrobe', { replace: true });
+          return;
+        }
         setExistingSession({ email: data.session.user.email ?? 'your account', admin: adm });
       }
     });
-  }, []);
+  }, [navigate]);
 
   const handleContinue = () => {
     navigate(existingSession?.admin ? '/admin' : '/wardrobe');
@@ -50,7 +54,7 @@ export default function Login() {
     setBusy(true);
     try {
       const result = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: window.location.origin,
+        redirect_uri: `${window.location.origin}/login?oauth=1`,
       });
       if (result.error) {
         toast.error('Google sign-in failed');
