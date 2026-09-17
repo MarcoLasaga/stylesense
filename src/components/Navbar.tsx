@@ -12,10 +12,10 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { syncLocalProfileFromCloud, isCloudAdmin } from '@/lib/socialStore';
 
 const primaryNav = [
-  { path: '/', label: 'Home', icon: Home },
   { path: '/wardrobe', label: 'Wardrobe', icon: Shirt },
-  { path: '/feed', label: 'Discover', icon: Compass },
+  { path: '/outfits', label: 'Outfits', icon: Compass },
   { path: '/planner', label: 'Planner', icon: CalendarDays },
+  { path: '/feed', label: 'Community', icon: UsersIcon },
 ];
 
 const moreNav = [
@@ -31,7 +31,6 @@ const moreNav = [
 ];
 
 const mobileNav = [
-  { path: '/', label: 'Home', icon: Home },
   { path: '/wardrobe', label: 'My Wardrobe', icon: Shirt },
   { path: '/upload', label: 'Add Clothes', icon: Shirt },
   { path: '/outfits', label: 'Outfit Generator', icon: Compass },
@@ -138,12 +137,14 @@ export default function Navbar() {
 
           {/* More dropdown */}
           <div ref={moreRef} className="relative">
-            <button
+              <Button
+                type="button"
+                variant="ghost"
               onClick={() => setMoreOpen(v => !v)}
-              className="px-3 py-2 rounded-full text-sm font-medium flex items-center gap-1 text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                className="rounded-full px-3 text-sm font-medium text-muted-foreground hover:text-foreground"
             >
               More <ChevronDown className="h-3.5 w-3.5" />
-            </button>
+              </Button>
             {moreOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-popover border border-border rounded-xl shadow-lg overflow-hidden py-1.5">
                 {moreNav.map(item => (
@@ -211,13 +212,15 @@ export default function Navbar() {
               </Avatar>
             </Link>
           )}
-          <button
-            className="p-2 rounded-lg hover:bg-secondary"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-lg"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -254,12 +257,13 @@ export default function Navbar() {
                     <Shield className="h-5 w-5 text-accent" /> Admin Panel
                   </Link>
                 )}
-                <button
+                <Button
+                  variant="ghost"
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-secondary text-left"
+                  className="h-auto w-full justify-start gap-3 rounded-lg px-3 py-3 text-sm font-medium"
                 >
                   <LogOut className="h-5 w-5 text-muted-foreground" /> Logout
-                </button>
+                </Button>
               </>
             ) : (
               <Link to="/login" onClick={() => setOpen(false)}>

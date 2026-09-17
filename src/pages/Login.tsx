@@ -7,7 +7,7 @@ import { syncLocalProfileFromCloud, isCloudAdmin } from '@/lib/socialStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import Navbar from '@/components/Navbar';
+import MarketingNav from '@/components/marketing/MarketingNav';
 import { Sparkles, LogOut, ArrowRight } from 'lucide-react';
 import { logout as localLogout } from '@/lib/store';
 
@@ -112,7 +112,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <MarketingNav />
       <div className="container mx-auto px-4 pt-24 pb-16 flex items-center justify-center min-h-screen">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
